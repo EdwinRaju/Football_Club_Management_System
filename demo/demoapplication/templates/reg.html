@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Design by foolishdeveloper.com -->
+    <meta charset="UTF-8">
+    <title>Registration Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div class="background">
+    <div class="shape"></div>
+    <div class="shape"></div>
+</div>
+<form id="Form" method="post" enctype="multipart/form-data">
+    <h3>Registration</h3>
+    {% csrf_token %}
+    <label for="fname">First Name:</label>
+    <input type="text" placeholder="Enter First Name" name="fname" id="fname">
+    <span class="error-message" id="fnameError"></span>
+    <br>
+    <label for="lname">Last Name:</label>
+    <input type="text" placeholder="Enter Last Name" name="lname" id="lname">
+    <span class="error-message" id="lnameError"></span>
+    <br>
+    <label for="dob">Date of birth:</label>
+    <input type="date" placeholder="Select DOB" name="dob" id="dob">
+    <span class="error-message" id="dobError"></span>
+    <br>
+    <label for="role" style="margin-top: 15px;">Role:</label>
+    <select id="role" class="custom-select" name="role">
+        <option value="staff">Staff</option>
+        <option value="player">Player</option>
+        <option value="coach">Coach</option>
+    </select>
+    <br>
+    <div id="jerseyNumberField" style="display: none;">
+        <label for="jerseyNumber">Jersey Number</label>
+        <input type="text" placeholder="Enter Jersey Number" name="jerseyNumber" id="jerseyNumber">
+        <span class="error-message" id="jerseyNumberError"></span>
+    </div>
+    <br>
+    <label for="cdate">Contract Start:</label>
+    <input type="date" placeholder="contract date" id="cdate" name="cdate">
+    <span class="error-message" id="cdateError"></span>
+    <br>
+    <label for="salary">Salary:</label>
+    <input type="text" id="salary" name="salary" placeholder="Enter Salary">
+    <span class="error-message" id="salaryError"></span>
+    <br>
+    <label for="email">Email ID:</label>
+    <input type="email" id="email" name="email" placeholder="Enter Email ID">
+    <span class="error-message" id="emailError"></span>
+    <br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" placeholder="Enter Password">
+    <span class="error-message" id="passwordError"></span>
+    <br>
+    <label for="image">Upload Image (JPG or PNG only):</label>
+    <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png">
+    <span class="error-message" id="fileTypeError"></span>
+    <br>
+    <div class="button-container">
+        <button>Submit</button>
+    </div>
+    {% if messages %}
+    <div class="error-container">
+        <ul class="error-list">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <div id="errorContainer"></div>
+</form>
+</body>
+<script src="{% static 'js/script.js' %}"></script>
+</html>
