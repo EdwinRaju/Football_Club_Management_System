@@ -1,0 +1,13 @@
+<section id="profile">
+    <h2>Profile</h2>
+    <div>
+        <img src="{% if user.img %}{{ user.img.url|safe }}{% else %}/static/images/default_avatar.png{% endif %}" alt="Profile Image">
+    </div>
+    <p>Name: {{ user.first_name }} {{ user.last_name }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Date of Birth: {{ user.dob }}</p>
+    <p>Position: {{ user.pos }}</p>
+    <p>Jersey Number: {{ user.jno }}</p>
+    <a href="{% url 'playerupdate' %}">Update Profile</a>
+</section>
+

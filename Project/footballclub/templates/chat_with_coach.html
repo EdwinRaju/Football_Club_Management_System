@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat with Coach</title>
+</head>
+<body>
+    <h1>Chat with Coach</h1>
+
+    <label for="playerSelect">Select a Player:</label>
+    <select id="playerSelect">
+        <!-- Populate the options dynamically with player email addresses -->
+    </select>
+
+    <input type="text" id="messageInput" placeholder="Enter your message">
+    <button id="sendMessage">Send</button>
+
+    <div id="chatLog"></div>
+
+    <script>
+       // Function to populate the select element with player email addresses
+function populatePlayerSelect() {
+  const playerSelect = document.getElementById('playerSelect');
+
+  // Fetch the list of player emails from the server
+  fetch('/api/get_players/')
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+
+      if (data.players) {
+        data.players.forEach(playerEmail => {
+          const option = document.createElement('option');
+          option.value = playerEmail.email; // Make sure to access the email property
+          option.textContent = playerEmail.email; // Make sure to access the email property
+          playerSelect.appendChild(option);
+        });
+      } else {
+        console.error('No player data found.');
+      }
+    })
+    .catch(error => {
+      console.error('Failed to fetch player emails:', error);
+    });
+
+  // Fetch the coach's email based on their role
+  fetch('/api/get_coach_email/')
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+
+      if (data.coach_email) {
+        const coachEmail = data.coach_email;
+
+        // Create a WebSocket connection
+        const socket = new WebSocket(`ws/chat/coach_123/`);
+
+        // Set up an event handler for when the WebSocket connection is opened
+        socket.onopen = function (event) {
+          // Add a message to the chat log indicating the WebSocket connection is open
+          const chatLog = document.getElementById('chatLog');
+          chatLog.innerHTML += '<p>WebSocket connection opened.</p>';
+        };
+
+        // Set up an event handler for when a message is received
+        socket.onmessage = function (event) {
+          const messageData = JSON.parse(event.data);
+          const chatLog = document.getElementById('chatLog');
+          chatLog.innerHTML += `<p>${coachEmail}: ${messageData.message}</p>`;
+        };
+
+        document.getElementById('sendMessage').addEventListener('click', function () {
+          const playerEmail = playerSelect.value;
+          const message = document.getElementById('messageInput').value;
+
+          // Create a message object with the recipient's email and the message content
+          const messageObj = {
+            to_player_email: playerEmail,
+            message: message,
+          };
+
+          // Send the message to the WebSocket server
+          socket.send(JSON.stringify(messageObj));
+
+          // Display the sent message in the chat log
+          const chatLog = document.getElementById('chatLog');
+          chatLog.innerHTML += `<p>You: ${message}</p>`;
+        });
+      } else {
+        console.error('No coach email found.');
+      }
+    })
+    .catch(error => {
+      console.error('Failed to fetch coach email:', error);
+    });
+}
+
+// Call the function to populate the select element and get the coach's email
+populatePlayerSelect();
+
+    </script>
+</body>
+</html>

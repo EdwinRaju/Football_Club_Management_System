@@ -1,0 +1,111 @@
+/* Common styles for all screen sizes */
+body {
+    background-image: url("../images/1.jpg");
+    background-size: cover;
+  
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+form {
+    background-color: rgba(255, 255, 255, 0.13);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+form * {
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    outline: none;
+    border: none;
+}
+
+form h3 {
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 42px;
+    text-align: center;
+}
+
+label {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+input,
+select {
+    width: 90%;
+    background-color: rgba(255, 255, 255, 0.07);
+    border-radius: 3px;
+    padding: 10px;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+select#role,
+select#role option {
+    background-color: rgb(217, 224, 215);
+    border-radius: 3px;
+    padding: 10px;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 300;
+    color: #ffffff; /* Text color */
+}
+
+::placeholder {
+    color: #e5e5e5;
+}
+
+button {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.07);
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.image-label {
+    margin-top: 5%;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* Style invalid fields with a red border */
+.error {
+    border: 2px solid red;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 600px) {
+    form {
+        width: 90%;
+        padding: 10px;
+    }
+
+    button {
+        font-size: 16px;
+    }
+}
