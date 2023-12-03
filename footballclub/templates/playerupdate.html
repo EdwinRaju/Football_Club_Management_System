@@ -1,0 +1,340 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="au theme template">
+    <meta name="author" content="Hau Nguyen">
+    <meta name="keywords" content="au theme template">
+
+    <!-- Title Page-->
+    <title>Dashboard 2</title>
+
+<!-- Fontfaces CSS -->
+<link href="{% static 'css/css/font-face.css' %}" rel="stylesheet" media="all">
+<link href="{% static 'vendor/font-awesome-4.7/css/font-awesome.min.css' %}" rel="stylesheet" media="all">
+<link href="{% static 'vendor/font-awesome-5/css/fontawesome-all.min.css' %}" rel="stylesheet" media="all">
+<link href="{% static 'vendor/mdi-font/css/material-design-iconic-font.min.css' %}" rel="stylesheet" media="all">
+
+<!-- Bootstrap CSS -->
+<link href="{% static 'vendor/bootstrap-4.1/bootstrap.min.css' %}" rel="stylesheet" media="all">
+
+<!-- Vendor CSS -->
+<link href="{% static 'vendor/animsition/animsition.min.css' %}" rel="stylesheet" media="all">
+<link href="{% static 'vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css' %}" rel="stylesheet" media="all">
+<link href="{% static 'vendor/wow/animate.css' %}" rel="stylesheet" media="all">
+<link href="{% static 'vendor/css-hamburgers/hamburgers.min.css' %}" rel="stylesheet" media="all">
+<link href="{% static 'vendor/slick/slick.css' %}" rel="stylesheet" media="all">
+<link href="{% static 'vendor/select2/select2.min.css' %}" rel="stylesheet" media="all">
+<link href="{% static 'vendor/perfect-scrollbar/perfect-scrollbar.css' %}" rel="stylesheet" media="all">
+<link href="{% static 'vendor/vector-map/jqvmap.min.css' %}" rel="stylesheet" media="all">
+
+
+    <!-- Main CSS-->
+<link href="{% static 'css/css/theme.css' %}" rel="stylesheet" media="all">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<style>
+    a {
+    text-decoration: none;
+}
+
+</style>
+
+</head>
+
+<body class="animsition">
+    <div class="page-wrapper">
+        <!-- MENU SIDEBAR-->
+        <aside class="menu-sidebar2">
+            <div class="logo">
+                <a href="#">
+                    <img src="{% static 'images/images/icon/logo2.png' %}" alt="CoolAdmin" />
+                </a>
+            </div>
+            <div class="menu-sidebar2__content js-scrollbar1">
+                <div class="account2">
+                    <div class="rounded-circle mx-auto d-block">
+                        <img src="{% if user.img %}{{ user.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="Profile Image" />
+                    </div>                    
+                    <h4 class="name">{{ user.first_name }} {{ user.last_name }}</h4>
+                    <a href="logout">Sign out</a>
+                </div>
+                <nav class="navbar-sidebar2">
+                    <ul class="list-unstyled navbar__list">
+                        <li class="active has-sub">
+                            <a class="js-arrow" href="player">
+                                <i class="fas fa-tachometer-alt"></i>Dashboard
+                            </a>
+                        </li>
+                        <li class="has-sub">
+                            <a class="js-arrow" href="player_profile">
+                                <i class="fas fa-trophy"></i>Profile
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-chart-bar"></i>Performance</a>
+                        </li>
+                        <li>
+                            <a href="{%url 'playertraining'%}">
+                                <i class="fas fa-comments"></i>Training</a>
+                        </li>
+                        <li class="has-sub">
+                            <a href="{% url 'match_list2' %}">
+                                <i class="fas fa-desktop"></i>
+                                <span class="bot-line"></span>Matches</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+        <!-- END MENU SIDEBAR-->
+
+        <!-- PAGE CONTAINER-->
+        <div class="page-container2">
+ <!-- HEADER DESKTOP-->
+ <header class="header-desktop2">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="header-wrap2">
+                <div class="logo d-block d-lg-none">
+                    <a href="#">
+                        <img src="{% static 'images/images/icon/logo2.png' %}" alt="CoolAdmin" />
+                    </a>
+                </div>
+                <div class="header-button2">
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<aside class="menu-sidebar2 js-right-sidebar d-block d-lg-none">
+    <div class="logo">
+        <a href="#">
+            <img src="{% static 'images/icon/logo-white.png' %}" alt="Cool Admin" />
+
+        </a>
+    </div>
+    <div class="menu-sidebar2__content js-scrollbar2">
+        <div class="account2">
+            <div class="image img-cir img-120">
+                <img src="images/icon/avatar-big-01.jpg" alt="John Doe" />
+            </div>
+            <h4 class="name">john doe</h4>
+            <a href="{% url 'logout' %}">Sign out</a>
+        </div>
+        <nav class="navbar-sidebar2">
+            <ul class="list-unstyled navbar__list">
+                <li class="active has-sub">
+                    <a class="js-arrow" href="player">
+                        <i class="fas fa-tachometer-alt"></i>Dashboard
+                    </a>
+                </li>
+           
+            </ul>
+        </nav>
+    </div>
+</aside>
+<!-- END HEADER DESKTOP-->
+
+            <!-- BREADCRUMB-->
+            <section class="au-breadcrumb m-t-75">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="au-breadcrumb-content">
+                                    <div class="au-breadcrumb-left">
+                                        <span class="au-breadcrumb-span">You are here:</span>
+                                        <ul class="list-inline au-breadcrumb__list">
+                                            <li class="list-inline-item active">
+                                                <a href="{% url 'player' %}">Home</a>
+                                            </li>
+                                            <li class="list-inline-item seprate">
+                                                <span>/</span>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <a href="{% url 'player' %}">Dashboard</a>
+                                            </li>
+                                            <li class="list-inline-item seprate">
+                                                <span>/</span>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <a href="{% url 'player_profile' %}">Player Profile</a>
+                                            </li>
+                                            <li class="list-inline-item seprate">
+                                                <span>/</span>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <a href="{% url 'playerupdate' %}">Player Profile Update</a>
+                                            </li>
+                                        </ul>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- END BREADCRUMB-->                 
+
+            {%load static%}
+
+            <div class="container">
+                <h2>Player Update</h2>
+                <form id="form" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="first_name">First Name:</label>
+                    <input class="au-input au-input--full" type="text" id="first_name" name="first_name" value="{{ user.first_name }}"><br>
+                    <span id="firstNameError" class="error-message"></span><br>
+                
+                    <label for="last_name">Last Name:</label>
+                    <input class="au-input au-input--full" type="text" id="last_name" name="last_name" value="{{ user.last_name }}"><br>
+                    <span id="lastNameError" class="error-message"></span><br>
+                
+                    <label for="age">Age:</label>
+                    <input class="au-input au-input--full" type="number" id="age" name="age" value="{{ user.age }}"><br>
+                    <span id="ageError" class="error-message"></span><br>
+                
+                    <label for="jerseyno">Jersey Number:</label>
+                    <input class="au-input au-input--full" type="number" id="jerseyno" name="jerseyno" value="{{ user.jno }}">
+                    <span id="jerseyNoError" class="error-message">{{ jersey_no_error }}</span>
+                    <span id="jerseyNoCheckMessage" class="error-message"></span><br>
+                    
+                
+                    <label for="image">Profile Image:</label>
+                    <input class="au-input au-input--full" type="file" id="image" name="image" accept=".jpg, .jpeg, .png"><br><br>
+                
+                    <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit" value="Update">Submit</button>
+                </form>
+                
+                <script>
+const form = document.getElementById("Form");
+const fnameInput = document.getElementById("first_name");
+const lnameInput = document.getElementById("last_name");
+const ageInput = document.getElementById("age");
+const jerseyNumberInput = document.getElementById("jerseyno");
+const imageInput = document.getElementById("image");
+const ageError = document.getElementById("ageError");
+
+
+// Add an "input" event listener to the First Name input
+fnameInput.addEventListener("input", () => {
+    validateAlphabetsOnly(fnameInput, "firstNameError");
+});
+
+// Add an "input" event listener to the Last Name input
+lnameInput.addEventListener("input", () => {
+    validateAlphabetsOnly(lnameInput, "lastNameError");
+});
+
+// Add an "input" event listener to the Date of Birth input
+ageInput.addEventListener("input", () => {
+    validateDateOfBirth(ageInput, "ageError");
+});
+
+// Add an "input" event listener to the Jersey Number input
+jerseyNumberInput.addEventListener("input", () => {
+    validateJerseyNumber(jerseyNumberInput, "jerseyNoError", "jerseyNoCheckMessage");
+});
+
+// Add a "change" event listener to the Image input for file type validation
+imageInput.addEventListener("change", () => {
+    validateImageFileType(imageInput);
+});
+
+// Function to validate that only alphabets are entered
+function validateAlphabetsOnly(inputElement, errorSpanId) {
+    const inputValue = inputElement.value;
+    const regex = /^[a-zA-Z]+$/;
+    const errorSpan = document.getElementById(errorSpanId);
+
+    if (!regex.test(inputValue)) {
+        inputElement.classList.add("error");
+        errorSpan.textContent = "Enter valid name";
+    } else {
+        inputElement.classList.remove("error");
+        errorSpan.textContent = "";
+    }
+}
+
+// Function to validate date of birth
+
+
+// Function to validate jersey number
+function validateJerseyNumber(inputElement, errorSpanId, checkMessageSpanId) {
+    const inputValue = parseInt(inputElement.value, 10);
+    const errorSpan = document.getElementById(errorSpanId);
+    const checkMessageSpan = document.getElementById(checkMessageSpanId);
+
+    if (isNaN(inputValue) || inputValue < 1 || inputValue > 99) {
+        inputElement.classList.add("error");
+        errorSpan.textContent = "Jersey number must be between 1 and 99.";
+        checkMessageSpan.textContent = "";
+    } else {
+        inputElement.classList.remove("error");
+        errorSpan.textContent = "";
+        checkMessageSpan.textContent = "Jersey number is valid.";
+    }
+}
+
+// Function to validate file type
+function validateImageFileType(inputElement) {
+    const allowedExtensions = ["jpg", "jpeg", "png"];
+    const fileName = inputElement.value.toLowerCase();
+    const fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
+    const fileTypeError = document.getElementById("fileTypeError");
+
+    if (!allowedExtensions.includes(fileExtension)) {
+        inputElement.classList.add("error");
+        fileTypeError.textContent = "Please select a JPG or PNG image.";
+    } else {
+        inputElement.classList.remove("error");
+        fileTypeError.textContent = "";
+    }
+}
+
+// Add a "submit" event listener to the form for final validation
+form.addEventListener("submit", (event) => {
+    const isFirstNameValid = validateAlphabetsOnly(fnameInput, "firstNameError");
+    const isLastNameValid = validateAlphabetsOnly(lnameInput, "lastNameError");
+    const isDateOfBirthValid = validateDateOfBirth(ageInput, "ageError");
+    const isJerseyNumberValid = validateJerseyNumber(jerseyNumberInput, "jerseyNoError", "jerseyNoCheckMessage");
+
+    if (!isFirstNameValid || !isLastNameValid || !isDateOfBirthValid || !isJerseyNumberValid) {
+        event.preventDefault();
+    }
+});
+
+                </script>
+                
+
+<script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+<!-- Bootstrap JS-->
+<script src="{% static 'vendor/bootstrap-4.1/popper.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap-4.1/bootstrap.min.js' %}"></script>
+<!-- Vendor JS       -->
+<script src="{% static 'vendor/slick/slick.min.js' %}"></script>
+<script src="{% static 'vendor/wow/wow.min.js' %}"></script>
+<script src="{% static 'vendor/animsition/animsition.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap-progressbar/bootstrap-progressbar.min.js' %}"></script>
+<script src="{% static 'vendor/counter-up/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'vendor/counter-up/jquery.counterup.min.js' %}"></script>
+<script src="{% static 'vendor/circle-progress/circle-progress.min.js' %}"></script>
+<script src="{% static 'vendor/perfect-scrollbar/perfect-scrollbar.js' %}"></script>
+<script src="{% static 'vendor/chartjs/Chart.bundle.min.js' %}"></script>
+<script src="{% static 'vendor/select2/select2.min.js' %}"></script>
+<!-- Main JS-->
+<script src="{% static 'js/js/main.js' %}"></script>
+
+    
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+</body>
+
+</html>
+<!-- end document-->

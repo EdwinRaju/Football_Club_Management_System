@@ -1,0 +1,137 @@
+const form = document.getElementById("Form");
+const fnameInput = document.getElementById("fname");
+const lnameInput = document.getElementById("lname");
+const salaryInput = document.getElementById("salary");
+const jerseyNumberInput = document.getElementById("jerseyno");
+const imageInput = document.getElementById("image");
+const fileTypeError = document.getElementById("fileTypeError");
+const dob = document.getElementById("dob");
+
+// Function to validate that only alphabets are entered in the first name and last name fields
+function validateAlphabetsOnly(inputElement) {
+    const inputValue = inputElement.value;
+    const regex = /^[a-zA-Z]+$/;
+    if (!regex.test(inputValue)) {
+        inputElement.classList.add("error");
+        inputElement.nextElementSibling.textContent = "Enter valid name";
+        return false;
+    } else {
+        inputElement.classList.remove("error");
+        inputElement.nextElementSibling.textContent = ""; // Clear error message
+        return true;
+    }
+}
+
+
+
+// Function to validate date of birth
+function validateDateOfBirth(inputElement) {
+    const dobValue = inputElement.value;
+    const currentDate = new Date();
+    const selectedDate = new Date(dobValue);
+
+    if (isNaN(selectedDate) || selectedDate > currentDate) {
+        inputElement.classList.add("error");
+        inputElement.nextElementSibling.textContent = "Enter a valid date of birth.";
+        return false;
+    } else {
+        inputElement.classList.remove("error");
+        inputElement.nextElementSibling.textContent = ""; // Clear error message
+        return true;
+    }
+}
+
+
+// Function to validate jersey number (between 1 and 99)
+function validateJerseyNumber(inputElement) {
+    const inputValue = parseInt(inputElement.value, 10);
+    if (isNaN(inputValue) || inputValue < 1 || inputValue > 99) {
+        inputElement.classList.add("error");
+        inputElement.nextElementSibling.textContent = "Jersey number must be between 1 and 99.";
+        return false;
+    } else {
+        inputElement.classList.remove("error");
+        inputElement.nextElementSibling.textContent = ""; // Clear error message
+        return true;
+    }
+}
+
+
+
+// Function to validate file type
+function validateImageFileType(inputElement) {
+    const allowedExtensions = ["jpg", "jpeg", "png"];
+    const fileName = inputElement.value.toLowerCase();
+    const fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
+
+    if (!allowedExtensions.includes(fileExtension)) {
+        inputElement.classList.add("error");
+        fileTypeError.textContent = "Please select a JPG or PNG image.";
+        return false;
+    } else {
+        inputElement.classList.remove("error");
+        fileTypeError.textContent = ""; // Clear error message
+        return true;
+    }
+}
+
+// Add input event listeners for real-time validation
+fnameInput.addEventListener("input", () => {
+    validateAlphabetsOnly(fnameInput);
+});
+
+lnameInput.addEventListener("input", () => {
+    validateAlphabetsOnly(lnameInput);
+});
+
+
+jerseyNumberInput.addEventListener("input", () => {
+    validateJerseyNumber(jerseyNumberInput);
+});
+
+dob.addEventListener("input", () => {
+    validateDateOfBirth(dob);
+});
+
+
+
+
+
+
+// Add a change event listener to the role select input for jersey number field toggle
+roleSelect.addEventListener("change", toggleJerseyNumberField);
+function toggleJerseyNumberField() {
+    if (roleSelect.value === "player") {
+        jerseyNumberField.style.display = "block";
+    } else {
+        jerseyNumberField.style.display = "none";
+    }
+}
+
+// Add a change event listener to the image input for file type validation
+imageInput.addEventListener("change", () => {
+    validateImageFileType(imageInput);
+});
+
+// Add a submit event listener to the form
+Form.addEventListener("submit", (event) => {
+    // Perform validation checks here
+    const isFirstNameValid = validateAlphabetsOnly(fnameInput);
+    const isLastNameValid = validateAlphabetsOnly(lnameInput);
+    const isDateOfBirthValid = validateDateOfBirth(dob);
+
+    // Check file type validation
+    const isImageFileTypeValid = validateImageFileType(imageInput);
+    const isJerseyNumberValid = roleSelect.value === "player" ? validateJerseyNumber(jerseyNumberInput) : true;
+    
+    // If any validation check fails, prevent form submission
+    if (
+        !isFirstNameValid ||
+        !isLastNameValid ||
+        !isDateOfBirthValid ||
+        !isImageFileTypeValid ||
+        !isJerseyNumberValid
+    ) {
+        event.preventDefault();
+    }
+});
