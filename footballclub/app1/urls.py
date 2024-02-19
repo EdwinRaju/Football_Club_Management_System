@@ -11,6 +11,8 @@ urlpatterns = [
     path('validate_email/', views.validate_email, name='validate_email'),
     path('checkJerseyNumberAvailability/', views.checkJerseyNumberAvailability, name='checkJerseyNumberAvailability'),
     path('login', views.login, name="login"),
+    path('demo', views.demo, name="demo"),
+
 
 
     path('staff',views.staff,name="staff"),
@@ -29,6 +31,7 @@ urlpatterns = [
     path('player2',views.player2,name="player2"),
     path('player_profile/', views.player_profile, name='player_profile'),
     path('playerupdate',views.playerupdate,name="playerupdate"),
+    path('playerchat',views.playerchat,name="playerchat"),
     path('training_list1', views.training_list1, name="training_list1"),
     path('playertraining',views.playertraining,name='playertraining'),
     path('generate_training_pdf/', views.generate_training_pdf_view, name='generate_training_pdf'),
@@ -43,6 +46,7 @@ urlpatterns = [
     path('coach/',views.coach,name="coach"),
     path('coachprofile',views.coachprofile,name="coachprofile"),
     path('coachupdate',views.coachupdate,name="coachupdate"),
+    path('coachchat',views.coachchat,name="coachchat"),
     path('coachaddtraining',views.coachaddtraining,name="coachaddtraining"),
     path('training_list', views.training_list, name="training_list"),
     path('training_list/<int:training_id>/', views.training_list, name="training_list"),
@@ -78,10 +82,16 @@ urlpatterns = [
     path('reset_password_complete/', auth_views.PasswordResetCompleteView.as_view(), name="password_reset_complete"),
 
     path('api/chat/start/', views.ChatStart.as_view(), name='chat-start'),
-    path('chat', views.chat_with_coach, name='chat_with_coach'),
-    path('chat2', views.chat_from_coach, name='chat_from_coach'),
-    path('lobby', views.lobby, name='lobby'),
-    path('match_list2/logout', views.logout, name="logout")
+    path('match_list2/logout', views.logout, name="logout"),
+
+
+      
+    path('scout',views.scout, name="scout"),
+    path('scoutplayer',views.scoutplayer, name="scoutplayer"),
+    path('scout_reg',views.scout_reg, name="scout_reg"),
+    path('scout_profile',views.scout_profile, name="scout_profile"),
+    path('chat/<int:receiver_id>/', views.chat, name='chat'),
+    path('send_message/', views.send_message, name='send_message'),
 
 
 ]

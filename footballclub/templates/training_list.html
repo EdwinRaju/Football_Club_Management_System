@@ -45,7 +45,7 @@
                 <div class="header3-wrap">
                     <div class="header__logo">
                         <a href="#">
-                            <img src="{% static 'images/images/icon/logo2.png' %}" alt="CoolAdmin" />
+                            <img src="{% static 'images/images/icon/logo2.png' %}"   alt="CoolAdmin" />
                         </a>
                     </div>
                     <div class="header__navbar">
@@ -80,7 +80,7 @@
                         <div class="account-wrap">
                             <div class="account-item account-item--style2 clearfix js-item-menu">
                                 <div class="image">
-                                    <img src="{% if user.img %}{{ user.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="John Doe" />
+                                    <img src="{% if coach.img %}{{ coach.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="Coach Avatar" />
                                 </div>
                                 <div class="content">
                                     <a class="js-acc-btn" href="#">{{ user.first_name }} {{ user.last_name }}</a>
@@ -89,14 +89,14 @@
                                     <div class="info clearfix">
                                         <div class="image">
                                             <a href="#">
-                                                <img src="{% if user.img %}{{ user.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="John Doe" />
+                                                <img src="{% if coach.img %}{{ coach.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="Coach Avatar" />
                                             </a>
                                         </div>
                                         <div class="content">
                                             <h5 class="name">
-                                                <a href="#">{{ user.first_name }}</a>
+                                                <a href="#">{{ coach.first_name }}</a>
                                             </h5>
-                                            <span class="email">{{ user.email }}</span>
+                                            <span class="email">{{ coach.user.email }}</span>
                                         </div>
                                     </div>
                                     <div class="account-dropdown__footer">
@@ -220,7 +220,7 @@
                                     <td>{{ training_session.start_time }}</td>
                                     <td>{{ training_session.end_time }}</td>
                                     <td>{{ training_session.status }}</td>
-                                    <td><a href="{% url 'update_performance' training_id=training_session.pk %}"><button class="au-btn au-btn--block au-btn--green m-b-20" type="update">Update</button></a></td>
+                                    <td><a href="{% url 'update_performance' training_id=training_session.pk %}"><button {% if training_session.status == 'finished' %}disabled{% endif %} class="au-btn au-btn--block au-btn--green m-b-20" type="update" >Update</button></a></td>
 
                                 </tr>
                                 {% endfor %}

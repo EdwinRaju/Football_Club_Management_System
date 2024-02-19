@@ -96,19 +96,19 @@
                 <nav class="navbar-sidebar">
                     <ul class="list-unstyled navbar__list">
                         <li class="active has-sub">
-                            <a class="js-arrow" href="admin1">
+                            <a class="js-arrow" href="{% url 'admin1' %}">
                                 <i class="fas fa-tachometer-alt"></i>Dashboard</a>
 
                         <li>
-                            <a href="registration">
+                            <a href="{% url 'registration' %}">
                                 <i class="fas fa-chart-bar"></i>Registrations</a>
                         </li>
                         <li>
-                            <a href="adminreg">
+                            <a href="{% url 'adminreg' %}">
                                 <i class="fas fa-group (alias)"></i>Team list</a>
                         </li>
                         <li>
-                            <a href="add_match_schedule">
+                            <a href="{% url 'add_match_schedule' %}">
                                 <i class="fas fa-calendar-alt"></i>Match Schedule</a>
                         </li>
                         <li>
@@ -175,7 +175,7 @@
 
                         <div class="content">
                             <header>
-                                <h2>Add Venu</h2>
+                                <h2>Add Venue</h2>
                                 <br>
                             </header>
                             <main>

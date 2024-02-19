@@ -151,7 +151,7 @@
                             
                             <div class="col-lg-9">
                                 {% if success_message %}
-                                <div class="alert alert-success" role="alert">
+                                <div id="successMessage" class="alert alert-success" role="alert">
                                     {{ success_message }}
                                 </div>
                                 {% endif %}
@@ -189,12 +189,7 @@
                                          </tr>
                                  {% endfor %}
                                  </tbody>
-                                 <tfoot>
-                                    <tr>
-                                        <td>Total Salary:</td>
-                                        <td>{{ total_salary }}</td>
-                                    </tr>
-                                </tfoot>
+
                               </table>
                             </div>
 
@@ -216,7 +211,7 @@
 
                 setTimeout(function() {
                     successMessage.style.display = 'none'; // Hide the alert after 5 seconds
-                }, 5000);
+                }, 10000);
             }
         });
     </script>

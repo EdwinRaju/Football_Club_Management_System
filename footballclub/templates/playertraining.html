@@ -51,9 +51,9 @@
             <div class="menu-sidebar2__content js-scrollbar1">
                 <div class="account2">
                     <div class="rounded-circle mx-auto d-block">
-                        <img src="{% if user.img %}{{ user.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="Profile Image" />
-                    </div>                    
-                    <h4 class="name">{{ user.first_name }} {{ user.last_name }}</h4>
+                        <img src="{% if request.user.player.img %}{{ request.user.player.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="Profile Image" />
+                    </div>
+                    <h4 class="name">{{ request.user.player.first_name }} {{ request.user.player.last_name }}</h4>
                     <a href="logout">Sign out</a>
                 </div>
                 <nav class="navbar-sidebar2">

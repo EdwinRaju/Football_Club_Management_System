@@ -75,8 +75,8 @@
                             </a>
                         </li>
                         <li>
-                            <a href="">
-                                <i class="fas fa-comments"></i>Players</a>
+                            <a href="{%url 'playerchat'%}">
+                                <i class="fas fa-comments"></i>Chat</a>
                         </li>
                         <li>
                             <a href="{%url 'playertraining'%}">
@@ -156,7 +156,7 @@
                                             <li class="list-inline-item seprate">
                                                 <span>/</span>
                                             </li>
-                                            <li class="list-inline-item">Dashboard</li>
+                                            <li class="list-inline-item">Chat</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -170,7 +170,10 @@
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
 
-                       <h1 class="pb-2 display-4"> WELCOME {{ user.first_name }}!</h1>
+
+
+
+
 
 
                     </div>

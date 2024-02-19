@@ -4,18 +4,21 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login as auth
 from django.contrib import messages
 from django.db import IntegrityError
-from django.http import JsonResponse
+from django.http import Http404, JsonResponse
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from .models import CustomUser
+from .models import CustomUser, Message, Player, ScoutedPlayer, Staff
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth import get_user_model
 import string
 import secrets
+
+from django.db import models
+
 
 def generate_password(length=12):
     # Define character sets for uppercase letters, lowercase letters, special characters, and digits
@@ -35,6 +38,10 @@ def generate_password(length=12):
 
 def index(request):
     return render(request,"index.html")
+
+
+def demo(request):
+    return render(request,"demo.html")
 
 
 
@@ -110,13 +117,12 @@ def check_email(request):
     return JsonResponse({'error': 'Invalid request'})
 
 
-from django.shortcuts import render
-from .utils.email_utils import send_email
 def reg(request):
     # Count the number of users for each role
     player_count = CustomUser.objects.filter(role='player').count()
     coach_count = CustomUser.objects.filter(role='coach').count()
     staff_count = CustomUser.objects.filter(role='staff').count()
+    scout_count = CustomUser.objects.filter(role='scout').count()
 
     if request.method == "POST":
         email = request.POST['email']
@@ -138,27 +144,38 @@ def reg(request):
                 raise IntegrityError("The maximum limit for coaches has been reached.")
             elif role == 'staff' and staff_count >= 10:
                 raise IntegrityError("The maximum limit for staff has been reached.")
-
+            elif role == 'scout' and scout_count >= 10:
+                raise IntegrityError("The maximum limit for staff has been reached.")
+ 
             generated_password = generate_password()
             # Create a new custom user instance
             user = CustomUser.objects.create_user(
                 username=email,
                 email=email,
-                password=generated_password,
-                sal=sal,
                 role=role,
-                pos=pos,
-                cdate=cdate,
+                password=generated_password,
             )
-            print(generate_password)
-            if role == 'player':
-                user.pos = pos
-            else:
-                user.pos = None
 
-            user.save()
+            if role == 'coach':
+                coach = Coach.objects.create(user=user, cdate=cdate, sal=sal)
+            elif role == 'player':
+                player = Player.objects.create(user=user, pos=pos, jno=0, cdate=cdate, sal=sal)
+            elif role == 'staff':
+                staff = Staff.objects.create(user=user, cdate=cdate, sal=sal)
+            elif role == 'scout':  
+                scout = Scout.objects.create(user=user, cdate=cdate, sal=sal)
 
-            send_email("Welcome to the Club", "Body of the email", email, generated_password)
+
+            my_dict = {'password': generated_password, 'email': email}
+            html_template = 'email_page.html'
+            html_message = render_to_string(html_template, context=my_dict)
+            subject = 'Welcome to the club'
+            email_from = settings.EMAIL_HOST_USER
+            recipient = [email]
+            message = EmailMessage(subject, html_message, email_from, recipient)
+            message.content_subtype = 'html'
+            message.send()
+            messages.success(request, "Registration successful!")
             return redirect('registration')  # Redirect to the login page after successful registration
         except IntegrityError as e:
             messages.error(request, str(e))  # Display the custom error message
@@ -170,16 +187,27 @@ def reg(request):
 
 
 
+from django.contrib.auth import authenticate, login as auth_login
 def login(request):
     if request.method == "POST":
         email = request.POST['email']
         password = request.POST['password']
             
-        user = authenticate(request, email=email, password=password)
+        # Debugging: Print input values
+        print(f"Email: {email}, Password: {password}")
+
+        # Authenticate using the provided email and password
+        user = authenticate(request, username=email, password=password)
+
+        # Debugging: Print the result of authentication
+        print(f"Authenticated User: {user}")
         
         if user is not None:
-            auth(request, user)
-            
+            auth_login(request, user)
+
+            # Debugging: Print user role
+            print(f"Authenticated User: {user}")
+
             # Check if the user is a superuser (admin)
             if user.is_superuser:
                 request.session['email'] = email
@@ -191,6 +219,9 @@ def login(request):
             elif user.role == 'coach':
                 request.session['email'] = email
                 return redirect('coach')
+            elif user.role == 'scout':
+                request.session['email'] = email
+                return redirect('scout')
             elif user.role == 'player':
                 request.session['email'] = email
                 return redirect('player')
@@ -271,24 +302,135 @@ def navigate_to_page(request):
 
 
 
+def scout(request):
+    if 'email' in request.session:
+        email = request.session['email']
+        User = get_user_model()
+        try:
+            user = User.objects.get(email=email)
+            if user.role == "scout":
+                # Check if first_name and last_name are empty; if so, redirect to the update page
+
+                response = render(request, 'scout.html')
+                response['Cache-Control'] = 'no-store, must-revalidate'
+                return response
+            else:
+                messages.error(request, "You don't have permission")
+        except User.DoesNotExist:
+            pass
+    return redirect('login')
+
+
+def scout_profile(request):
+    if 'email' in request.session:
+        email = request.session['email']
+        User = get_user_model()
+        try:
+            user = User.objects.get(email=email)
+            if user.role == "scout":
+                response = render(request, 'scout_profile.html')
+                response['Cache-Control'] = 'no-store, must-revalidate'
+                return response
+            else:
+                messages.error(request, "You don't have permission")
+        except User.DoesNotExist:
+            pass
+    return redirect('login')
+
+
+def scout_reg(request):
+    if 'email' in request.session:
+        email = request.session['email']
+        User = get_user_model()
+        try:
+            user = User.objects.get(email=email)
+            if user.role == "scout":
+                if request.method == 'POST':
+                    # Retrieve data from the form
+                    first_name = request.POST.get('first_name')
+                    last_name = request.POST.get('last_name')
+                    age = request.POST.get('age')
+                    position = request.POST.get('position')
+                    current_status = request.POST.get('current_status')
+                    rating = request.POST.get('rating')
+                    player_email = request.POST.get('email')
+
+                    # Create a new ScoutedPlayer instance and save to the database
+                    player = ScoutedPlayer(
+                        scout=user.scout,  # Correct attribute is user.scout, assuming scout is the related name
+                        first_name=first_name,
+                        last_name=last_name,
+                        age=age,
+                        position=position,
+                        current_status=current_status,
+                        rating=rating,
+                        email=player_email
+                    )
+                    player.save()
+
+                    # Redirect to a success page or any desired page
+                    success_message = "Player added successfully!"
+
+                response = render(request, 'scout_reg.html')
+                response['Cache-Control'] = 'no-store, must-revalidate'
+                return response
+            else:
+                messages.error(request, "You don't have permission")
+        except User.DoesNotExist:
+            pass
+    return redirect('login')
+
+
+
+
+def scoutplayer(request):
+    if 'email' in request.session:
+        email = request.session['email']
+        User = get_user_model()
+        try:
+            user = User.objects.get(email=email)
+            if user.role == "scout":
+                # Check if first_name and last_name are empty; if so, redirect to the update page
+
+                response = render(request, 'scoutplayer.html')
+                response['Cache-Control'] = 'no-store, must-revalidate'
+                return response
+            else:
+                messages.error(request, "You don't have permission")
+        except User.DoesNotExist:
+            pass
+    return redirect('login')
+
+
+
+
+
 # views.py  
 
 import razorpay
 
 # views.pyfrom django.db.models import Sum
-from django.db.models import Sum
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Staff
+from django.contrib.auth import get_user_model
 
+# views.py
 def staff(request):
     if 'email' in request.session:
         email = request.session['email']
         User = get_user_model()
-        
+
         try:
             user = User.objects.get(email=email)
             if user.role == "staff":
-                response = render(request, 'staff.html')
-                response['Cache-Control'] = 'no-store, must-revalidate'
+                staff = user.staff  # Assuming staff is related to the user
+                # Check if first_name and last_name are empty; if so, redirect to the update page
+                if not staff.first_name or not staff.last_name:
+                    return redirect('staffupdate')
 
+                response = render(request, 'staff.html', {'staff': staff})
+                response['Cache-Control'] = 'no-store, must-revalidate'
                 return response
             else:
                 messages.error(request, "You don't have permission")
@@ -297,14 +439,26 @@ def staff(request):
     
     return redirect('login')
 
+
+
 # views.py
 from django.shortcuts import render
 from .models import CustomUser
 import razorpay
 
+from django.shortcuts import render
+from .models import Coach, Scout, Player, Staff
+import razorpay
+
 def staffpayment(request):
     # Fetch all users (exclude admin)
-    users = CustomUser.objects.filter(is_staff=False)
+    coaches = Coach.objects.all()
+    scouts = Scout.objects.all()
+    players = Player.objects.all()
+    staff_members = Staff.objects.all()
+
+    # Combine all users into a single list
+    users = list(coaches) + list(scouts) + list(players) + list(staff_members)
 
     # Create a Razorpay client
     client = razorpay.Client(auth=("rzp_test_tOR86kN1zqpkOT", "8vRIcGYCLZ2C0T545MEwoMtl"))
@@ -318,7 +472,7 @@ def staffpayment(request):
             "amount": int(user.sal * 100),  # Convert salary to paise
             "currency": "INR",
             "receipt": f"receipt#{user.pk}",
-            "notes": {"user_id": user.pk, "email": user.email},
+            "notes": {"user_id": user.pk, "email": user.user.email},
         }
 
         # Create a Razorpay order
@@ -327,8 +481,10 @@ def staffpayment(request):
         # Append user data along with payment information
         user_data = {'user': user, 'payment': payment}
         data['users'].append(user_data)
+
     data['success_message'] = "Payment successful!"  # Change this message as needed
     return render(request, 'staffpayment.html', data)
+
 
 
 
@@ -350,76 +506,94 @@ def process_payment(request):
 
 
 
-@login_required  
+@login_required
 def staffprofile(request):
-    staff = request.user  # Assuming the player is logged in
+    staff = request.user.staff  # Assuming staff is related to the user
     context = {
         'staff': staff,
     }
     return render(request, 'staffprofile.html', context)
 
 
+
+from django.shortcuts import render, redirect
+from .models import Staff
+
 def staffupdate(request):
     if request.method == 'POST':
-        user = request.user  # Assuming the player is logged in
-        user.first_name = request.POST.get('first_name')
-        user.last_name = request.POST.get('last_name')
-        user.age = request.POST.get('age')
+        staff = request.user.staff  # Assuming staff is related to the user
+        staff.first_name = request.POST.get('first_name')
+        staff.last_name = request.POST.get('last_name')
+        staff.age = request.POST.get('age')
         image = request.FILES.get('image')
         if image:
-            user.img = image
-        user.save()
-        return redirect('staffprofile')  # Redirect to the player profile page
+            staff.img = image
+        staff.save()
+        return redirect('staffprofile')  # Redirect to the staff profile page
 
-    return render(request, 'staffupdate.html', {'user': request.user})
+    return render(request, 'staffupdate.html', {'staff': request.user.staff})
+
 
 
 # COACH
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from .models import Coach
 
 def coach(request):
     if 'email' in request.session:
         email = request.session['email']
         User = get_user_model()
         
-        try:
-            user = User.objects.get(email=email)
-            if user.role == "coach":
+    try:
+            coach = Coach.objects.get(user__email=email)
+            
+            if coach.user.role == "coach":
                 # Check if first_name and last_name are empty; if so, redirect to the update page
-                if not user.first_name or not user.last_name:
+                if not coach.first_name or not coach.last_name:
                     return redirect('coachupdate')
-                response = render(request, 'coach.html')
+                context = {'coach': coach}
+                
+                response = render(request, 'coach.html', context)
                 response['Cache-Control'] = 'no-store, must-revalidate'
                 return response
             else:
                 messages.error(request, "You don't have permission")
-        except User.DoesNotExist:
+    except User.DoesNotExist:
             pass
     
     return redirect('login')
 
 
-@login_required 
+
+@login_required
 def coachprofile(request):
-    coach = request.user  # Assuming the player is logged in
+    coach = request.user.coach  # Assuming the coach is logged in
+    print(coach.first_name, coach.last_name, coach.age, coach.img)  # Add this line
     context = {
         'coach': coach,
     }
     return render(request, 'coachprofile.html', context)
 
 
+
 def coachupdate(request):
     if request.method == 'POST':
-        user = request.user  # Assuming the player is logged in
-        user.first_name = request.POST.get('first_name')
-        user.last_name = request.POST.get('last_name')
-        user.age = request.POST.get('age')
+        coach = request.user.coach  # Assuming the coach is logged in
+        coach.first_name = request.POST.get('first_name')
+        coach.last_name = request.POST.get('last_name')
+        coach.age = request.POST.get('age')
         image = request.FILES.get('image')
         if image:
-            user.img = image
-        user.save()
-        return redirect('coachprofile')  # Redirect to the player profile page
+            coach.img = image
+        coach.save()
+        return redirect('coachprofile')  # Redirect to the coach profile page
 
-    return render(request, 'coachupdate.html', {'user': request.user})
+    return render(request, 'coachupdate.html', {'coach': request.user.coach})
+
+
 
 
 
@@ -431,16 +605,43 @@ from .models import TrainingSession
 from .forms import TrainingSessionForm
 
 
+
+def coachchat(request):
+    if 'email' in request.session:
+        email = request.session['email']
+        User = get_user_model()
+        
+    try:
+            coach = Coach.objects.get(user__email=email)
+            
+            if coach.user.role == "coach":
+                context = {'coach': coach}
+                
+                response = render(request, 'coachchat.html', context)
+                response['Cache-Control'] = 'no-store, must-revalidate'
+                return response
+            else:
+                messages.error(request, "You don't have permission")
+    except User.DoesNotExist:
+            pass
+    
+    return redirect('login')
+
+
+
+
+
+
 def coachaddtraining(request):
     if request.method == 'POST':
         form = TrainingSessionForm(request.POST)
         if form.is_valid():
             training_date = form.cleaned_data['date']
-            coach = request.user
+            coach_email = request.user.email  # Get the coach's email
 
-            if coach:
+            if coach_email:
                 existing_session = TrainingSession.objects.filter(
-                    Q(date=training_date) & Q(coach=coach)
+                    Q(date=training_date) & Q(coach__user__email=coach_email)
                 ).first()
 
                 if existing_session:
@@ -448,7 +649,7 @@ def coachaddtraining(request):
                 else:
                     # Create a new training session
                     training_session = form.save(commit=False)
-                    training_session.coach = coach
+                    training_session.coach = Coach.objects.get(user__email=coach_email)
                     training_session.save()
 
                     messages.success(request, f"Training session for {training_date} has been created.")
@@ -466,11 +667,13 @@ def coachaddtraining(request):
 
 from django.shortcuts import render
 from .models import TrainingSession
+from .models import Coach  # Import the Coach model
 
+@login_required
 def training_list(request):
-   training_sessions = TrainingSession.objects.order_by('date')
-   return render(request, 'training_list.html', {'training_sessions': training_sessions})
-
+    coach = request.user.coach  # Assuming the coach is logged in
+    training_sessions = TrainingSession.objects.order_by('date')
+    return render(request, 'training_list.html', {'coach': coach, 'training_sessions': training_sessions})
 
 
 
@@ -481,17 +684,17 @@ from .models import PlayerPerformance
 
 def update_performance(request, training_id):
     training_session = TrainingSession.objects.get(pk=training_id)
-    players = CustomUser.objects.filter(role='player')
+    players = Player.objects.all()  # Use Player model instead of CustomUser
 
     if request.method == 'POST':
         for player in players:
             # Retrieve the values from the form
-            shoot = request.POST.get(f'shoot_{player.email}')
-            passing = request.POST.get(f'passing_{player.email}')
-            dribble = request.POST.get(f'dribble_{player.email}')
-            defense = request.POST.get(f'defense_{player.email}')
-            physical = request.POST.get(f'physical_{player.email}')
-            speed = request.POST.get(f'speed_{player.email}')
+            shoot = request.POST.get(f'shoot_{player.user.email}')
+            passing = request.POST.get(f'passing_{player.user.email}')
+            dribble = request.POST.get(f'dribble_{player.user.email}')
+            defense = request.POST.get(f'defense_{player.user.email}')
+            physical = request.POST.get(f'physical_{player.user.email}')
+            speed = request.POST.get(f'speed_{player.user.email}')
 
             # Check if shoot is not None and not an empty string
             if shoot is not None and shoot != '':
@@ -519,11 +722,18 @@ def update_performance(request, training_id):
             player_performance.physical = physical
             player_performance.speed = speed
             player_performance.save()
-
+            if PlayerPerformance.objects.filter(training_session=training_session, shoot__isnull=True).exists():
+                # Not all performances are filled, set status to 'unfinished'
+                training_session.status = 'unfinished'
+            else:
+                # All performances are filled, set status to 'finished'
+                training_session.status = 'finished'
+        
+        # Save the updated status of the training session
+        training_session.save()
         return redirect('training_list')
 
     return render(request, 'update_performance.html', {'training_session': training_session, 'players': players})
-
 
 
 
@@ -590,10 +800,14 @@ def player(request):
         try:
             user = User.objects.get(email=email)
             if user.role == "player":
+                # Retrieve the player instance
+                player = user.player
+                
                 # Check if first_name and last_name are empty; if so, redirect to the update page
-                if not user.first_name or not user.last_name:
+                if not player.first_name or not player.last_name:
                     return redirect('playerupdate')
-                response = render(request, 'player.html')
+                
+                response = render(request, 'player.html', {'player': player})
                 response['Cache-Control'] = 'no-store, must-revalidate'
                 return response
             else:
@@ -604,9 +818,11 @@ def player(request):
     return redirect('login')
 
 
-@login_required  # Ensure the user is logged in to access this view
+
+
+@login_required
 def player_profile(request):
-    player = request.user  # Assuming the player is logged in
+    player = request.user.player  # Assuming the player is logged in
     context = {
         'player': player,
     }
@@ -614,20 +830,52 @@ def player_profile(request):
 
 
 
+from django.shortcuts import render, redirect
+from .models import Player
+
 def playerupdate(request):
     if request.method == 'POST':
-        user = request.user  # Assuming the player is logged in
-        user.first_name = request.POST.get('first_name')
-        user.last_name = request.POST.get('last_name')
-        user.age = request.POST.get('age')
-        user.jno = request.POST.get('jerseyno')
+        player = request.user.player  # Assuming the player is logged in
+        player.first_name = request.POST.get('first_name')
+        player.last_name = request.POST.get('last_name')
+        player.age = request.POST.get('age')
+        player.jno = request.POST.get('jerseyno')
         image = request.FILES.get('image')
         if image:
-            user.img = image
-        user.save()
+            player.img = image
+        player.save()
         return redirect('player_profile')  # Redirect to the player profile page
 
-    return render(request, 'playerupdate.html', {'user': request.user})
+    return render(request, 'playerupdate.html', {'player': request.user.player})
+
+
+
+
+def playerchat(request):
+    if 'email' in request.session:
+        email = request.session['email']
+        User = get_user_model()
+        
+        try:
+            user = User.objects.get(email=email)
+            if user.role == "player":
+                # Assuming that Player is related to the user through the CustomUser model
+                player = Player.objects.get(user=user)
+                
+                context = {'player': player}
+
+                response = render(request, 'playerchat.html', context)
+                response['Cache-Control'] = 'no-store, must-revalidate'
+                return response
+            else:
+                messages.error(request, "You don't have permission")
+        except User.DoesNotExist:
+            pass
+    
+    return redirect('login')
+
+
+
 
 
 def player2(request):
@@ -714,9 +962,18 @@ from .models import PlayerPerformance
 
 from django.db.models import Avg  # Add this import
 
+from django.core.exceptions import ObjectDoesNotExist  # Add this import
+
 @login_required
 def playerperformance(request, player_id):
-    player = CustomUser.objects.get(email=player_id)  # Retrieve the player using the email
+    try:
+        # Retrieve the player using the email
+        player = Player.objects.get(user__email=player_id)
+    except ObjectDoesNotExist:
+        # Handle the case where the player is not found
+        raise Http404("Player not found")
+
+    # Retrieve the latest performance for the player
     latest_performance = PlayerPerformance.objects.filter(player=player).last()
 
     # Calculate the average performance for the player
@@ -786,19 +1043,6 @@ def get_coach_email(request):
     return JsonResponse(data)
 
 
-
-from django.shortcuts import render
-
-def chat_with_coach(request):
-    return render(request, 'chat_with_coach.html')
-
-
-def chat_from_coach(request):
-    return render(request, 'chat_from_coach.html')
-
-
-def lobby(request):
-    return render(request, 'lobby.html')
 
 
 
@@ -938,10 +1182,51 @@ def update_result(request, match_id):
 
 
 
+@login_required
 def match_list1(request):
- matches = Match.objects.order_by('date')
- return render(request, 'match_list1.html', {'matches': matches})
+    coach = request.user.coach  # Assuming the coach is logged in
+    matches = Match.objects.order_by('date')
+    return render(request, 'match_list1.html', {'coach': coach, 'matches': matches})
 
 def match_list2(request):
- matches = Match.objects.order_by('date')
- return render(request, 'match_list2.html', {'matches': matches})
+    matches = Match.objects.order_by('date')
+    user = request.user
+    player = user.player
+    return render(request, 'match_list2.html', {'matches': matches, 'player': player})
+
+
+@login_required
+def chat(request, receiver_id=None):
+    if receiver_id:
+        receiver = get_object_or_404(Player, id=receiver_id)
+        messages = Message.objects.filter(
+            (models.Q(sender=request.user, receiver=receiver) | models.Q(sender=receiver, receiver=request.user))
+        ).order_by('timestamp')
+
+        if request.method == 'POST':
+            content = request.POST.get('content', '')
+            Message.objects.create(sender=request.user, receiver=receiver, content=content)
+
+        return render(request, 'chat.html', {'receiver': receiver, 'messages': messages})
+    else:
+        return render(request, 'chat.html')
+
+
+
+@login_required
+def send_message(request):
+    if request.method == 'POST':
+        receiver_id = request.POST.get('receiver_id')
+        content = request.POST.get('content')
+
+        # You should replace this with your actual user model and message creation logic
+        # Assuming you have a 'Message' model with 'sender', 'receiver', and 'content' fields
+        try:
+            receiver = CustomUser.objects.get(id=receiver_id)
+            message = Message.objects.create(sender=request.user, receiver=receiver, content=content)
+            messages.success(request, 'Message sent successfully!')
+        except CustomUser.DoesNotExist:
+            messages.error(request, 'Receiver not found.')
+
+    # Redirect to the user's profile or any other appropriate page
+    return redirect('chat', receiver_id=receiver_id)

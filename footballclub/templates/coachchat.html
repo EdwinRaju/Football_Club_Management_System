@@ -67,7 +67,11 @@
                                     <i class="fas fa-shopping-basket"></i>
                                     <span class="bot-line"></span> Training Sessions</a>
                             </li>
-
+                            <li>
+                                <a href="{% url 'coachchat' %}">
+                                    <i class="fas fa-shopping-basket"></i>
+                                    <span class="bot-line"></span> Chat</a>
+                            </li>
                             <li class="has-sub">
                                 <a href="{% url 'match_list1' %}">
                                     <i class="fas fa-desktop"></i>
@@ -80,23 +84,23 @@
                         <div class="account-wrap">
                             <div class="account-item account-item--style2 clearfix js-item-menu">
                                 <div class="image">
-                                    <img src="{% if coach.img %}{{ coach.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="Coach Avatar" />
+                                    <img src="{% if coach.img %}{{ coach.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="John Doe" />
                                 </div>
                                 <div class="content">
-                                    <a class="js-acc-btn" href="#">{{ user.first_name }} {{ user.last_name }}</a>
+                                    <a class="js-acc-btn" href="#">{{ coach.first_name }} {{ coach.last_name }}</a>
                                 </div>
                                 <div class="account-dropdown js-dropdown">
                                     <div class="info clearfix">
                                         <div class="image">
                                             <a href="#">
-                                                <img src="{% if coach.img %}{{ coach.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="Coach Avatar" />
+                                                <img src="{% if coach.img %}{{ coach.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="John Doe" />
                                             </a>
                                         </div>
                                         <div class="content">
                                             <h5 class="name">
                                                 <a href="#">{{ coach.first_name }}</a>
                                             </h5>
-                                            <span class="email">{{ coach.user.email }}</span>
+                                            <span class="email">{{ user.email }}</span>
                                         </div>
                                     </div>
                                     <div class="account-dropdown__footer">
@@ -105,6 +109,7 @@
                                     </div>
                                 </div>
                             </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -195,12 +200,7 @@
                                         <li class="list-inline-item seprate">
                                             <span>/</span>
                                         </li>
-                                        <li class="list-inline-item">Dashboard</li>
-                                        <li class="list-inline-item seprate">
-                                            <span>/</span>
-                                        </li>
-                                        <li class="list-inline-item">Profile</li>
-
+                                        <li class="list-inline-item">Chat</li>
                                     </ul>
                                 </div>
 
@@ -211,24 +211,13 @@
             </section>
             <!-- END BREADCRUMB-->
 
-            <!-- WELCOME-->
-            <div class="col-md-5 mx-auto">
-                <div class="card">                     
-                    <img src="{% if coach.img %}{{ coach.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" class="card-img-top" alt="...">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">{{ coach.first_name }} {{ coach.last_name }}</h5>
-                        <p class="card-text">Email: {{ coach.user.email }}</p>
-                        <p class="card-text">Age: {{ coach.age }}</p>
-                        <p class="card-text">Role: {{ coach.user.role }}</p>
-                        <a href="{% url 'coachupdate' %}" class="btn btn-primary">Update</a>
-                    </div>
-                    
-                    
-                    </div>
-                </div>
-            </div>
-            
-            <!-- END WELCOME-->
+
+
+
+
+
+
+
 
             
 

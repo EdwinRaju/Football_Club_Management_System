@@ -168,9 +168,12 @@
             <!-- END BREADCRUMB-->
             <div class="main-content">
                 <div class="section__content section__content--p30">
+                    <h2>PLayers list</h2>
                     <div class="container-fluid">
-
-                       <h1 class="pb-2 display-4"> WELCOME {{ user.first_name }}!</h1>
+                       {% for plar in player %}
+                       <li><a href="#">{{ plar.firstname }}</a></li>
+                       
+                       {% endfor %}
 
 
                     </div>

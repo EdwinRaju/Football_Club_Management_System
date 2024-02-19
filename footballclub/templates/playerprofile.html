@@ -57,9 +57,9 @@
             <div class="menu-sidebar2__content js-scrollbar1">
                 <div class="account2">
                     <div class="rounded-circle mx-auto d-block">
-                        <img src="{% if user.img %}{{ user.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="Profile Image" />
-                    </div>                    
-                    <h4 class="name">{{ user.first_name }} {{ user.last_name }}</h4>
+                        <img src="{% if player.img %}{{ player.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="Profile Image" />
+                    </div>
+                    <h4 class="name">{{ player.first_name }} {{ player.last_name }}</h4>                    
                     <a href="{% url 'logout' %}">Sign out</a>
                 </div>
                 <nav class="navbar-sidebar2">
@@ -174,11 +174,11 @@
 
             <div class="col-md-5 mx-auto">
                 <div class="card">                     
-                    <img src="{% if user.img %}{{ user.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" class="card-img-top" alt="...">
+                    <img src="{% if player.img %}{{ player.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" class="card-img-top" alt="...">
                     <div class="card-body text-center">
-                        <h5 class="card-title">{{ user.first_name }} {{ user.last_name }}</h5>
-                        <p class="card-text">Email: {{ user.email }}</p>
-                        <p class="card-text">Age: {{ user.age }}</p>
+                        <h5 class="card-title">{{ player.first_name }} {{ player.last_name }}</h5>
+                        <p class="card-text">Email: {{ player.email }}</p>
+                        <p class="card-text">Age: {{ player.age }}</p>
                         <a href="{% url 'playerupdate' %}" class="btn btn-primary">Update</a>
                     </div>
                 </div>

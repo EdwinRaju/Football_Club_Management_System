@@ -80,7 +80,7 @@
                         <div class="account-wrap">
                             <div class="account-item account-item--style2 clearfix js-item-menu">
                                 <div class="image">
-                                    <img src="{% if user.img %}{{ user.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="John Doe" />
+                                    <img src="{% if coach.img %}{{ coach.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="Coach Avatar" />
                                 </div>
                                 <div class="content">
                                     <a class="js-acc-btn" href="#">{{ user.first_name }} {{ user.last_name }}</a>
@@ -89,14 +89,14 @@
                                     <div class="info clearfix">
                                         <div class="image">
                                             <a href="#">
-                                                <img src="{% if user.img %}{{ user.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="John Doe" />
+                                                <img src="{% if coach.img %}{{ coach.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="Coach Avatar" />
                                             </a>
                                         </div>
                                         <div class="content">
                                             <h5 class="name">
-                                                <a href="#">{{ user.first_name }}</a>
+                                                <a href="#">{{ coach.first_name }}</a>
                                             </h5>
-                                            <span class="email">{{ user.email }}</span>
+                                            <span class="email">{{ coach.user.email }}</span>
                                         </div>
                                     </div>
                                     <div class="account-dropdown__footer">
@@ -209,27 +209,27 @@
             <!-- WELCOME-->
             <section class="welcome p-t-10">
                 <div class="container">
-                    <h2>Player Update</h2>
+                    <h2>Coach Update</h2>
                     <form id="form" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <label for="first_name">First Name:</label>
-                        <input class="au-input au-input--full" type="text" id="first_name" name="first_name" value="{{ user.first_name }}"><br>
+                        <input class="au-input au-input--full" type="text" id="first_name" name="first_name" value="{{ coach.first_name }}"><br>
                         <span id="firstNameError" class="error-message"></span><br>
                     
                         <label for="last_name">Last Name:</label>
-                        <input class="au-input au-input--full" type="text" id="last_name" name="last_name" value="{{ user.last_name }}"><br>
+                        <input class="au-input au-input--full" type="text" id="last_name" name="last_name" value="{{ coach.last_name }}"><br>
                         <span id="lastNameError" class="error-message"></span><br>
                     
                         <label for="age">Age:</label>
-                        <input class="au-input au-input--full" type="number" id="age" name="age" value="{{ user.age }}"><br>
+                        <input class="au-input au-input--full" type="number" id="age" name="age" value="{{ coach.age }}"><br>
                         <span id="ageError" class="error-message"></span><br>
-                        
                     
                         <label for="image">Profile Image:</label>
                         <input class="au-input au-input--full" type="file" id="image" name="image" accept=".jpg, .jpeg, .png"><br><br>
                     
                         <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit" value="Update">Submit</button>
                     </form>
+                    
                     
                     <script>
     const form = document.getElementById("Form");

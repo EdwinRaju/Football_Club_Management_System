@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat System</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Montserrat", sans-serif;
+        background-color: #dbe9f6;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        min-height: 100vh;
+      }
+
+      header {
+        background-color: #f0f5f9;
+        color: #5c5c5c;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+      }
+
+      nav ul {
+        list-style: none;
+        display: flex;
+        align-items: center;
+      }
+
+      nav a {
+        text-decoration: none;
+        color: #5c5c5c;
+        margin: 0 20px;
+      }
+
+      #chat-container {
+        max-width: 800px;
+        margin: 20px auto;
+        background-color: #fff;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: row;
+        height: 500px;
+      }
+
+      #user-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+        border-right: 1px solid #ddd;
+      }
+
+      #message-container {
+        flex: 2;
+        overflow-y: auto;
+        padding: 20px;
+      }
+
+      #message-form {
+        width: calc(49% - 20px); /* Adjusted width calculation */
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        margin-left: 430px;
+        /* background-color: #f0f5f9; */
+        /* border-top: 1px solid #ddd; */
+      }
+
+      #message-form textarea {
+        border: 1px solid #ddd;
+        border-radius: 15px 0 0 15px;
+        padding: 10px;
+        flex: 1;
+        height: 40px;
+      }
+
+      #message-form button {
+        background-color: #80a4c2;
+        color: #fff;
+        border: none;
+        height: 40px;
+        border-radius: 0 15px 15px 0;
+        padding: 10px 20px;
+        margin-left: 0px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      #message-form button:hover {
+        background-color: #658da9;
+      }
+
+      .sent {
+        text-align: right;
+        background-color: #80a4c2;
+        color: white;
+        border-radius: 30px 30px 0 30px;
+        margin-bottom: 10px;
+        margin-left: 290px;
+        display: block;
+        padding: 10px;
+        width: fit-content;
+        height: fit-content;
+        border: 2px solid #80a4c2;
+        /* align-self: flex-end; Align to the right side */
+      }
+
+      .received {
+        text-align: left;
+        background-color: #bddcf9;
+        color: #333;
+        border-radius: 30px 30px 30px 0;
+        margin-bottom: 10px;
+        display: block;
+        padding: 10px;
+        width: fit-content;
+        height: fit-content;
+        border: 2px solid #bddcf9;
+        align-self: flex-start; /* Align to the left side */
+      }
+
+      .sent span,
+      .received span {
+        font-size: 12px; /* Adjust the size as needed */
+      }
+
+      footer {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+        background-color: #f0f5f9;
+        color: #5c5c5c;
+        text-align: center;
+        padding: 10px 0;
+      }
+      .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #80a4c2;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+      }
+
+      #h1{
+        align-items: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="{% url 'about_us' %}">About</a></li>
+          <li><a href="{% url 'profile' %}">My profile</a></li>
+          <li><a href="{% url 'contact' %}">Contact</a></li>
+        </ul>
+      </nav>
+      <h1 id="h1">Messages</h1>
+      <div class="user-info">
+        <p>Hello, {{ user.username }}</p>
+        <a href="{% url 'logout' %}" class="btn btn-primary" id="logout-link"
+          >Logout</a
+        >
+      </div>
+    </header>
+
+    <div id="chat-container">
+      <div id="user-list">
+        <!-- List of users with username and profile picture -->
+        {% for user in chat_users %}
+        <div>
+          <img
+            src="{{ user.profile_picture.url }}"
+            alt="{{ user.username }}"
+            width="30"
+            height="30"
+          />
+          <span>{{ user.username }}</span>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div id="message-container">
+        {% for message in messages %}
+        <div
+          class="{% if message.sender == user %}sent{% else %}received{% endif %}"
+        >
+          <p>{{ message.content }}</p>
+          <span>{{ message.timestamp }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Form to send a new message -->
+    <form action="{% url 'send_message' %}" method="post" id="message-form">
+      {% csrf_token %}
+      <input type="hidden" name="receiver_id" value="{{ receiver.id }}" />
+      <textarea
+        name="content"
+        rows="1"
+        placeholder="Type your message..."
+      ></textarea>
+      <button type="submit">Send</button>
+    </form>
+
+    <footer>
+      <p>&copy; 2023 SkillSwap. All rights reserved.</p>
+    </footer>
+    <script>
+      // Function to refresh the page every 10 seconds
+      setInterval(function () {
+        location.reload();
+      }, 10000); // Adjust the time interval as needed (in milliseconds)
+      document.getElementById("message-container").scrollTop =
+        document.getElementById("message-container").scrollHeight;
+    </script>
+  </body>
+</html>
