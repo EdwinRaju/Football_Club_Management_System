@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Amigos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha384-d7K5UnrA+kLrUHRZsP8xcJhJaa6aMlOK98LXaFjhTC+z9VvOxC2VZU8csLw0p/7p" crossorigin="anonymous"></script>
+
 </head>
 <body>
   <nav class="navbar bg-body-tertiary">
@@ -32,47 +34,47 @@
           <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
             <div class="grid gap-3">
                 <li class="nav-item p-1 g-col-6">
-                    <div class="d-flex align-items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door-fill me-2" viewBox="0 0 16 16">
-                            <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5"/>
-                        </svg>
-                        <a class="nav-link active fw-bold " aria-current="page" href="#">Home</a>
-                    </div>
-                </li>                
-            <li class="nav-item p-1 g-col-6" >
-                <div class="d-flex align-items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill me-2" viewBox="0 0 16 16">
-                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                  <div class="d-flex align-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door-fill me-2" viewBox="0 0 16 16">
+                        <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5"/>
+                    </svg>
+                    <a class="nav-link active fw-bold " aria-current="page" href="{% url 'scout'%}">Home</a>
+                </div>
+            </li>                
+        <li class="nav-item p-1 g-col-6" >
+            <div class="d-flex align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill me-2" viewBox="0 0 16 16">
+                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+              </svg>
+          <a class="nav-link fw-bold" href="{% url 'scout_profile'%}">Profile</a>
+          </div>
+        </li>
+        <li class="nav-item p-1 g-col-6">
+            <div class="d-flex align-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-table me-2" viewBox="0 0 16 16">
+                    <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 2h-4v3h4zm0 4h-4v3h4zm0 4h-4v3h3a1 1 0 0 0 1-1zm-5 3v-3H6v3zm-5 0v-3H1v2a1 1 0 0 0 1 1zm-4-4h4V8H1zm0-4h4V4H1zm5-3v3h4V4zm4 4H6v3h4z"/>
                   </svg>
-              <a class="nav-link fw-bold" href="{% url 'scout_profile'%}">Profile</a>
-              </div>
-            </li>
-            <li class="nav-item p-1 g-col-6">
-                <div class="d-flex align-items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-table me-2" viewBox="0 0 16 16">
-                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 2h-4v3h4zm0 4h-4v3h4zm0 4h-4v3h3a1 1 0 0 0 1-1zm-5 3v-3H6v3zm-5 0v-3H1v2a1 1 0 0 0 1 1zm-4-4h4V8H1zm0-4h4V4H1zm5-3v3h4V4zm4 4H6v3h4z"/>
-                      </svg>
-              <a class="nav-link fw-bold" href="#">Registration</a>
-              </div>
-            </li>
-            <li class="nav-item p-1 g-col-6">
-                <div class="d-flex align-items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-fill me-2" viewBox="0 0 16 16">
-                        <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/>
-                      </svg>
-              <a class="nav-link fw-bold" href="#">Request</a>
-              </div>
-            </li>
-            <li class="nav-item p-1 g-col-6">
-                <div class="d-flex align-items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar me-2" viewBox="0 0 16 16">
-                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
-                      </svg>
-              <a class="nav-link fw-bold" href="#">Comparison</a>
-              </div>
-            </li>
-            <a class="btn btn-primary  p-1 g-col-6 w-25 p-1 fw-bold" href="{% url 'logout' %}" role="button">Logout</a>
-            </div>
+          <a class="nav-link fw-bold" href="{% url 'scout_reg'%}">Registration</a>
+          </div>
+        </li>
+        <li class="nav-item p-1 g-col-6">
+            <div class="d-flex align-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-fill me-2" viewBox="0 0 16 16">
+                    <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/>
+                  </svg>
+          <a class="nav-link fw-bold" href="{% url 'scout_review_requests'%}">Request from Coach</a>
+          </div>
+        </li>
+        <li class="nav-item p-1 g-col-6">
+            <div class="d-flex align-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar me-2" viewBox="0 0 16 16">
+                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+                  </svg>
+          <a class="nav-link fw-bold" href="{%url 'scoutplayer'%}">Scouted Player</a>
+          </div>
+        </li>
+        <a class="btn btn-primary  p-1 g-col-6 w-25 p-1 fw-bold" href="{% url 'logout' %}" role="button">Logout</a>
+        </div>
           </ul>
         </div>
       </div>
@@ -81,39 +83,38 @@
   </nav>
   
   <div class="container mt-5">
-<!-- Add this section for the Bootstrap toast -->
-{% if success_message %}
-<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-  <div class="toast-header">
-    <img src="..." class="rounded me-2" alt="...">
-    <strong class="me-auto">Success</strong>
-    <small>Now</small>
-    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-  </div>
-  <div class="toast-body">
-    {{ success_message }}
-  </div>
-</div>
-{% endif %}
+    {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-success" role="alert">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+  
 
     <h1 class="text-center mb-3">Add New Player</h1>
     <form id="Form" method="post" enctype="multipart/form-data">
-      {% csrf_token %}
+        {% csrf_token %}
       <div class="row">
         <div class="col">
           <label for="first_name" class="form-label">First Name</label>
           <input type="text" class="form-control" id="first_name" name="first_name" required>
         </div>
+<!-- Add this to your HTML form -->
         <div class="col">
-          <label for="last_name" class="form-label">Last Name</label>
-          <input type="text" class="form-control" id="last_name" name="last_name" required>
+            <label for="last_name" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="last_name" name="last_name" required>
         </div>
-      </div>
+        </div>
       <label for="email" class="form-label">Email</label>
-          <input type="text" class="form-control" id="email" name="email" required>
+          <input type="email" class="form-control" id="email" name="email" required>
       <div class="form-group mt-3">
         <label for="age" class="form-label">Age</label>
-        <input type="number" class="form-control" id="age" name="age" min="1" max="120" required>
+        <input type="number" class="form-control" id="age" name="age" min="16" max="40" required>
+      </div>
+      <div class="form-group mt-3">
+        <label for="sal" class="form-label">Salary</label>
+        <input type="number" class="form-control" id="sal" name="sal"  required>
       </div>
       <div class="form-group mt-3">
         <label for="position" class="form-label">Position</label>
@@ -148,14 +149,41 @@
     </form>
   </div>
   <script>
-    var toastElList = [].slice.call(document.querySelectorAll('.toast'))
-    var toastList = toastElList.map(function (toastEl) {
-      return new bootstrap.Toast(toastEl)
+    document.addEventListener('DOMContentLoaded', function() {
+        const firstNameInput = document.getElementById('first_name');
+        const lastNameInput = document.getElementById('last_name');
+
+        // Add input event listeners to validate inputs on the fly
+        firstNameInput.addEventListener('input', validateInput);
+        lastNameInput.addEventListener('input', validateInput);
+
+        function validateInput(event) {
+            const input = event.target;
+            const inputValue = input.value.trim();
+            
+            // Allow only alphabets
+            const isValid = /^[a-zA-Z]+$/.test(inputValue);
+
+            // Limit the length to 20 characters
+            if (inputValue.length > 20) {
+                input.setCustomValidity('Maximum length is 20 characters.');
+            } else {
+                input.setCustomValidity('');
+            }
+
+            // Display an error message if invalid characters are entered
+            if (!isValid) {
+                input.setCustomValidity('Only alphabets are allowed.');
+            } else {
+                input.setCustomValidity('');
+            }
+
+            // Update the form's validity state
+            input.reportValidity();
+        }
     });
-    toastList.forEach(function (toast) {
-      toast.show();
-    });
-  </script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-</body>
+</script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  </body>
 </html>

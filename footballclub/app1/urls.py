@@ -23,6 +23,7 @@ urlpatterns = [
 
 
 
+    path('admin_review_requests',views.admin_review_requests,name="admin_review_requests"),
     path('admin1',views.admin1,name="admin1"),
     path('navigate_to_page', views.navigate_to_page, name='navigate_to_page'),    
     path('adminindex',views.adminindex,name="adminindex"),
@@ -47,6 +48,7 @@ urlpatterns = [
     path('coachprofile',views.coachprofile,name="coachprofile"),
     path('coachupdate',views.coachupdate,name="coachupdate"),
     path('coachchat',views.coachchat,name="coachchat"),
+    path('coach_request_view',views.coach_request_view,name="coach_request_view"),
     path('coachaddtraining',views.coachaddtraining,name="coachaddtraining"),
     path('training_list', views.training_list, name="training_list"),
     path('training_list/<int:training_id>/', views.training_list, name="training_list"),
@@ -90,9 +92,16 @@ urlpatterns = [
     path('scoutplayer',views.scoutplayer, name="scoutplayer"),
     path('scout_reg',views.scout_reg, name="scout_reg"),
     path('scout_profile',views.scout_profile, name="scout_profile"),
+    path('scout-review-requests/', views.scout_review_requests, name='scout_review_requests'),
+    path('search_players/', views.search_players, name='search_players'),
     path('chat/<int:receiver_id>/', views.chat, name='chat'),
     path('send_message/', views.send_message, name='send_message'),
 
+
+    path('send-player-details/<int:player_id>/', views.send_player_details, name='send_player_details'),
+    path('coachplayer/', views.coachplayer, name='coachplayer'),
+    path('approve-player/<int:request_id>/', views.approve_player, name='approve_player'),
+    path('reject-player/<int:request_id>/', views.reject_player, name='reject_player'),
 
 ]
 

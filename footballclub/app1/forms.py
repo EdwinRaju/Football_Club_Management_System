@@ -88,3 +88,6 @@ class TrainingSessionForm(forms.ModelForm):
             raise forms.ValidationError(f"A match is already scheduled for {date}.")
 
         return date
+
+
+# forms.py

@@ -4,12 +4,12 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login as auth
 from django.contrib import messages
 from django.db import IntegrityError
-from django.http import Http404, JsonResponse
+from django.http import Http404, HttpResponseBadRequest, JsonResponse
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from .models import CustomUser, Message, Player, ScoutedPlayer, Staff
+from .models import CoachRequest, CustomUser, Message, Player, PlayerDetailsRequest, ScoutedPlayer, Staff
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, get_object_or_404
@@ -300,6 +300,27 @@ def navigate_to_page(request):
 
 
 
+def admin_review_requests(request):
+    if not request.user.is_staff:
+        # Redirect non-admin users to the home page or another appropriate view
+        return redirect('admin1')
+
+    coach_requests = CoachRequest.objects.all()
+
+    if request.method == 'POST':
+        request_id = request.POST.get('request_id')
+        status = request.POST.get('status')
+
+        coach_request = CoachRequest.objects.get(pk=request_id)
+        coach_request.status = status
+        coach_request.save()
+
+        return redirect('admin_review_requests')
+
+    return render(request, 'admin_review_requests.html', {'coach_requests': coach_requests})
+
+
+
 
 
 def scout(request):
@@ -338,6 +359,8 @@ def scout_profile(request):
     return redirect('login')
 
 
+from django.contrib import messages
+
 def scout_reg(request):
     if 'email' in request.session:
         email = request.session['email']
@@ -350,6 +373,7 @@ def scout_reg(request):
                     first_name = request.POST.get('first_name')
                     last_name = request.POST.get('last_name')
                     age = request.POST.get('age')
+                    sal = request.POST.get('sal')
                     position = request.POST.get('position')
                     current_status = request.POST.get('current_status')
                     rating = request.POST.get('rating')
@@ -357,10 +381,11 @@ def scout_reg(request):
 
                     # Create a new ScoutedPlayer instance and save to the database
                     player = ScoutedPlayer(
-                        scout=user.scout,  # Correct attribute is user.scout, assuming scout is the related name
+                        scout=user.scout,
                         first_name=first_name,
                         last_name=last_name,
                         age=age,
+                        sal=sal,
                         position=position,
                         current_status=current_status,
                         rating=rating,
@@ -368,8 +393,11 @@ def scout_reg(request):
                     )
                     player.save()
 
-                    # Redirect to a success page or any desired page
-                    success_message = "Player added successfully!"
+                    # Add a success message
+                    messages.success(request, "Player added successfully!")
+
+                    # Redirect to the scout_reg page
+                    return redirect('scout_reg')
 
                 response = render(request, 'scout_reg.html')
                 response['Cache-Control'] = 'no-store, must-revalidate'
@@ -381,6 +409,101 @@ def scout_reg(request):
     return redirect('login')
 
 
+def scout_review_requests(request):
+    if not request.user.scout:
+        # Redirect non-scout users to the home page or another appropriate view
+        return redirect('home')
+
+    coach_requests = CoachRequest.objects.filter(status='approved')
+
+    if request.method == 'POST':
+        coach_request_id = request.POST.get('coach_request_id')
+        scout = request.user.scout
+
+        # Get or create a ScoutedPlayer object for the coach request
+        scouted_player, created = ScoutedPlayer.objects.get_or_create(
+            scout=scout,
+            coach_request_id=coach_request_id,
+            defaults={
+                'first_name': request.POST.get('first_name'),
+                'last_name': request.POST.get('last_name'),
+                'age': int(request.POST.get('age')),
+                'position': request.POST.get('position'),
+                'current_status': request.POST.get('current_status'),
+                'rating': int(request.POST.get('rating')),
+                'email': request.POST.get('email'),
+            }
+        )
+
+        return redirect('scout_dashboard')  # Change this to the appropriate URL
+
+    return render(request, 'scout_review_requests.html', {'coach_requests': coach_requests})
+
+def search_players(request):
+    if not request.user.scout:
+        # Redirect non-scout users to the home page or another appropriate view
+        return redirect('home')
+
+    if request.method == 'POST':
+        position = request.POST.get('position')
+        
+        # Use the 'or' operator to provide default values if fields are None
+        min_age = int(request.POST.get('min_age') or 0)
+        max_age = int(request.POST.get('max_age') or 100)  # Assuming a reasonable maximum age
+        min_rating = int(request.POST.get('min_rating') or 0)
+        max_rating = int(request.POST.get('max_rating') or 5)  # Assuming a reasonable maximum rating
+
+        # Perform the search based on the provided criteria
+        search_results = ScoutedPlayer.objects.filter(
+            position=position,
+            age__gte=min_age,
+            age__lte=max_age,
+            rating__gte=min_rating,
+            rating__lte=max_rating
+        )
+
+        return render(request, 'search_players.html', {'search_results': search_results})
+
+    return render(request, 'scout_review_requests.html', {'coach_requests': coach_requests})
+
+
+
+def send_player_details(request, player_id):
+    player = ScoutedPlayer.objects.get(id=player_id)
+
+    if request.method == 'POST':
+        # Extract form data directly from request.POST
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        age = request.POST.get('age')
+        sal = request.POST.get('sal')
+        position = request.POST.get('position')
+        current_status = request.POST.get('current_status')
+        rating = request.POST.get('rating')
+        email = request.POST.get('email')
+
+        # Create PlayerDetailsRequest entry
+        PlayerDetailsRequest.objects.create(
+            player=player,
+            first_name=first_name,
+            last_name=last_name,
+            age=age,
+            sal=sal,
+            position=position,
+            current_status=current_status,
+            rating=rating,
+            email=email,
+        )
+
+        # Optionally, you can add a success message
+        messages.success(request, 'Player details sent successfully.')
+
+        # Redirect to the scout dashboard or another appropriate URL
+        return redirect('scout')
+
+    return render(request, 'scout.html', {'player': player})
+
+
 
 
 def scoutplayer(request):
@@ -390,19 +513,40 @@ def scoutplayer(request):
         try:
             user = User.objects.get(email=email)
             if user.role == "scout":
-                # Check if first_name and last_name are empty; if so, redirect to the update page
+                # Fetch all scouted players from the database
+                scouted_players = ScoutedPlayer.objects.all()
 
-                response = render(request, 'scoutplayer.html')
-                response['Cache-Control'] = 'no-store, must-revalidate'
-                return response
+                # Pass the scouted_players to the template
+                return render(request, 'scoutplayer.html', {'scouted_players': scouted_players})
             else:
                 messages.error(request, "You don't have permission")
         except User.DoesNotExist:
             pass
     return redirect('login')
 
+def coach_request_view(request):
+    if request.method == 'POST':
+        coach = request.user.coach  # Assuming the coach is logged in
+        position = request.POST.get('position')
+        min_age = int(request.POST.get('min_age'))
+        max_age = int(request.POST.get('max_age'))
+        min_rating = int(request.POST.get('min_rating'))
+        max_rating = int(request.POST.get('max_rating'))
 
+        # Create a new coach request
+        CoachRequest.objects.create(
+            coach=coach,
+            position=position,
+            min_age=min_age,
+            max_age=max_age,
+            min_rating=min_rating,
+            max_rating=max_rating,
+        )
 
+        messages.success(request, 'Coach request submitted successfully!')
+        return redirect('coach')  # Change this to the appropriate URL
+
+    return render(request, 'coach_request_view.html') 
 
 
 # views.py  
@@ -441,9 +585,6 @@ def staff(request):
 
 
 
-# views.py
-from django.shortcuts import render
-from .models import CustomUser
 import razorpay
 
 from django.shortcuts import render
@@ -488,7 +629,6 @@ def staffpayment(request):
 
 
 
-from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 @csrf_exempt
@@ -595,6 +735,71 @@ def coachupdate(request):
 
 
 
+# views.py
+
+from django.shortcuts import render
+from .models import PlayerDetailsRequest
+
+def coachplayer(request):
+    # Retrieve all PlayerDetailsRequest objects
+    player_details_requests = PlayerDetailsRequest.objects.all()
+
+    return render(request, 'coachplayer.html', {'player_details_requests': player_details_requests})
+# views.py
+# views.py
+# views.py
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Player, ScoutedPlayer, PlayerDetailsRequest, CustomUser
+from datetime import datetime
+
+def approve_player(request, request_id):
+    player_details_request = PlayerDetailsRequest.objects.get(id=request_id)
+
+    # Assuming the coach is making the request and has a user associated with the request
+    coach_user = request.user
+    generated_password = generate_password()
+
+    # Retrieve or create the CustomUser based on the email from PlayerDetailsRequest
+    player_user, created = CustomUser.objects.get_or_create(email=player_details_request.email, defaults={'username': player_details_request.email, 'role': 'player','password':generated_password})
+
+    # Add player details to the Player table and associate it with the player's user
+    new_player = Player.objects.create(
+        user=player_user,
+        first_name=player_details_request.first_name,
+        last_name=player_details_request.last_name,
+        age=player_details_request.age,
+        pos=player_details_request.position,
+        sal=player_details_request.sal,
+        cdate=datetime.now(),  # Set cdate to current date and time
+        # Add other fields as needed
+    )
+    my_dict = {'password': generated_password, 'email': player_details_request.email}
+    html_template = 'email_page.html'
+    html_message = render_to_string(html_template, context=my_dict)
+    subject = 'Welcome to the club'
+    email_from = settings.EMAIL_HOST_USER
+    recipient = [player_details_request.email]
+    message = EmailMessage(subject, html_message, email_from, recipient)
+    message.content_subtype = 'html'
+    message.send()
+    # Delete from ScoutedPlayer and PlayerDetailsRequest tables
+    player_details_request.player.delete()
+    player_details_request.delete()
+
+    messages.success(request, 'Player approved successfully.')
+    return redirect('coachplayer')
+
+def reject_player(request, request_id):
+    player_details_request = PlayerDetailsRequest.objects.get(id=request_id)
+
+    # Delete from PlayerDetailsRequest table
+    player_details_request.delete()
+
+    messages.success(request, 'Player rejected successfully.')
+    return redirect('coachplayer')
+
+
 
 
 from django.shortcuts import render, redirect
@@ -602,7 +807,7 @@ from django.contrib import messages
 from django.utils.timezone import timedelta
 from django.db.models import Q
 from .models import TrainingSession
-from .forms import TrainingSessionForm
+from .forms import  TrainingSessionForm
 
 
 

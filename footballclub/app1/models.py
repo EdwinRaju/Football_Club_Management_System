@@ -166,6 +166,7 @@ class ScoutedPlayer(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     age = models.IntegerField()
+    sal = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, default=0.0)
     position = models.CharField(max_length=50, choices=[("CF", "Forward"), ("CM", "Midfielder"), ("CD", "Defender"), ("GK", "Goal Keeper")])
     current_status = models.CharField(max_length=10, choices=[("Free", "Free"), ("club", "In a Club")])
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
@@ -183,3 +184,29 @@ class Message(models.Model):
 
     def _str_(self):
         return f"Message from {self.sender.username} to {self.receiver.username}"
+
+
+# models.py
+class CoachRequest(models.Model):
+    coach = models.ForeignKey(Coach, on_delete=models.CASCADE)
+    position = models.CharField(max_length=50)
+    min_age = models.IntegerField()
+    max_age = models.IntegerField()
+    min_rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    max_rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    status = models.CharField(max_length=20, choices=[("pending", "Pending"), ("approved", "Approved"), ("rejected", "Rejected")], default="pending")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+
+# models.py
+class PlayerDetailsRequest(models.Model):
+    player = models.ForeignKey(ScoutedPlayer, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    age = models.IntegerField()
+    sal = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, default=0.0)
+    position = models.CharField(max_length=50, choices=[("CF", "Forward"), ("CM", "Midfielder"), ("CD", "Defender"), ("GK", "Goal Keeper")])
+    current_status = models.CharField(max_length=10, choices=[("Free", "Free"), ("club", "In a Club")])
+    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    email = models.EmailField()
