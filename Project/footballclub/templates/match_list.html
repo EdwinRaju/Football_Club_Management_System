@@ -96,7 +96,7 @@
                 <nav class="navbar-sidebar">
                     <ul class="list-unstyled navbar__list">
                         <li class="active has-sub">
-                            <a class="js-arrow" href="admin1">
+                            <a class="js-arrow" href="{% url 'admin1' %}">
                                 <i class="fas fa-tachometer-alt"></i>Dashboard</a>
                         </li>
 
@@ -189,8 +189,10 @@
                             <tr>
                                 <th>Opponent</th>
                                 <th>Date</a></th>
+                                <th>Time</a></th>
                                 <th>Venue</a></th>
-                                <th>Result</th>                            </tr>
+                                <th>Result</th>   
+                             </tr>
                             </thead>
                             <tbody>
                                     <tr>
@@ -198,6 +200,7 @@
 
                                         <td>{{ match.opponent }}</td>
                                         <td>{{ match.date }}</td>
+                                        <td>{{ match.time }}</td>  
                                         <td>{{ match.venue }}</td>
                                         <td>{{ match.result }}</td>
                                     </tr>

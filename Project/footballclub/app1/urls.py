@@ -5,15 +5,27 @@ from . import views
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
+    path('dead', views.dead, name='dead'),
+
     path('',views.index, name="index"),
     path('registration', views.reg, name="registration"),
     path('check_email/', views.check_email, name='check_email'),
     path('validate_email/', views.validate_email, name='validate_email'),
     path('checkJerseyNumberAvailability/', views.checkJerseyNumberAvailability, name='checkJerseyNumberAvailability'),
     path('login', views.login, name="login"),
+    path('demo', views.demo, name="demo"),
+
+
+
     path('staff',views.staff,name="staff"),
     path('staffprofile',views.staffprofile,name="staffprofile"),
     path('staffupdate',views.staffupdate,name="staffupdate"),
+    path('staffpayment',views.staffpayment,name="staffpayment"),
+    path('process_payment/', views.process_payment, name='process_payment'),
+
+
+
+    path('admin_review_requests',views.admin_review_requests,name="admin_review_requests"),
     path('admin1',views.admin1,name="admin1"),
     path('navigate_to_page', views.navigate_to_page, name='navigate_to_page'),    
     path('adminindex',views.adminindex,name="adminindex"),
@@ -22,16 +34,24 @@ urlpatterns = [
     path('player2',views.player2,name="player2"),
     path('player_profile/', views.player_profile, name='player_profile'),
     path('playerupdate',views.playerupdate,name="playerupdate"),
+    path('playerchat',views.playerchat,name="playerchat"),
     path('training_list1', views.training_list1, name="training_list1"),
+    path('playertraining',views.playertraining,name='playertraining'),
+    path('generate_training_pdf/', views.generate_training_pdf_view, name='generate_training_pdf'),
+
     path('playerperformance', views.playerperformance, name='playerperformance_no_id'),  # Rename the URL
     path('playerperformance/<str:player_id>/', views.playerperformance, name='playerperformance'),
+    path('create_venue/', views.create_venue, name='create_venue'),
 
 
 
 
     path('coach/',views.coach,name="coach"),
     path('coachprofile',views.coachprofile,name="coachprofile"),
+    path('playerlist',views.playerlist,name="playerlist"),
     path('coachupdate',views.coachupdate,name="coachupdate"),
+    path('coachchat',views.coachchat,name="coachchat"),
+    path('coach_request_view',views.coach_request_view,name="coach_request_view"),
     path('coachaddtraining',views.coachaddtraining,name="coachaddtraining"),
     path('training_list', views.training_list, name="training_list"),
     path('training_list/<int:training_id>/', views.training_list, name="training_list"),
@@ -67,12 +87,26 @@ urlpatterns = [
     path('reset_password_complete/', auth_views.PasswordResetCompleteView.as_view(), name="password_reset_complete"),
 
     path('api/chat/start/', views.ChatStart.as_view(), name='chat-start'),
-    path('api/get_players/', views.PlayerEmailListView.as_view(), name='get_players'),
-    path('api/get_coach_email/', views.CoachEmailView.as_view(), name='get_coach_email'),
-    path('chat', views.chat_with_coach, name='chat_with_coach'),
-    path('chat2', views.chat_from_coach, name='chat_from_coach'),
-    path('lobby', views.lobby, name='lobby'),
-    path('match_list2/logout', views.logout, name="logout")
+    path('match_list2/logout', views.logout, name="logout"),
+
+
+      
+    path('scout',views.scout, name="scout"),
+    path('scoutplayer',views.scoutplayer, name="scoutplayer"),
+    path('scout_reg',views.scout_reg, name="scout_reg"),
+    path('scout_profile',views.scout_profile, name="scout_profile"),
+    path('scout-review-requests/', views.scout_review_requests, name='scout_review_requests'),
+    path('search_players/', views.search_players, name='search_players'),
+    path('chat/<int:receiver_id>/', views.chat, name='chat'),
+    path('send_message/', views.send_message, name='send_message'),
+
+
+
+    path('send-player-details/<int:player_id>/', views.send_player_details, name='send_player_details'),
+    path('coachplayer/', views.coachplayer, name='coachplayer'),
+    path('approve-player/<int:request_id>/', views.approve_player, name='approve_player'),
+    path('reject-player/<int:request_id>/', views.reject_player, name='reject_player'),
+    path('coach_dashboard/', views.coach_dashboard, name='coach_dashboard'),
 
 
 ]

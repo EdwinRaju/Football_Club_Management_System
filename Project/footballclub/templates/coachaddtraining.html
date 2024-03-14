@@ -68,10 +68,15 @@
                                     <span class="bot-line"></span> Training Sessions</a>
                             </li>
                           
-                            <li class="has-sub">
-                                <a href="#">
-                                    <i class="fas fa-copy"></i>
-                                    <span class="bot-line"></span>Chat</a>
+                            <li>
+                                <a href="{% url 'coach_request_view' %}">
+                                    <i class="fas fa-shopping-basket"></i>
+                                    <span class="bot-line"></span> Player Request</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'coachplayer' %}">
+                                    <i class="fas fa-shopping-basket"></i>
+                                    <span class="bot-line"></span>Player Approval</a>
                             </li>
                             <li class="has-sub">
                                 <a href="{% url 'match_list1' %}">
@@ -85,16 +90,16 @@
                         <div class="account-wrap">
                             <div class="account-item account-item--style2 clearfix js-item-menu">
                                 <div class="image">
-                                    <img src="{% if user.img %}{{ user.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="John Doe" />
+                                    <img src="{% if coach.img %}{{ coach.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="{{ coach.user.first_name }} {{ coach.user.last_name }}" />
                                 </div>
                                 <div class="content">
-                                    <a class="js-acc-btn" href="#">{{ user.first_name }} {{ user.last_name }}</a>
+                                    <a class="js-acc-btn" href="#">{{ coach.user.first_name }} {{ coach.user.last_name }}</a>
                                 </div>
                                 <div class="account-dropdown js-dropdown">
                                     <div class="info clearfix">
                                         <div class="image">
                                             <a href="#">
-                                                <img src="{% if user.img %}{{ user.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="John Doe" />
+                                                <img src="{% if coach.img %}{{ coach.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="{{ coach.user.first_name }} {{ coach.user.last_name }}" />
                                             </a>
                                         </div>
                                         <div class="content">
@@ -223,27 +228,36 @@
                         <br>
                         <form method="post">
                             <h4>Training Session</h4>
-
+                        
                             {% csrf_token %}
-                            <input  type="hidden" name="coach" value="{{ coach.id }}"><br>
+                            <input type="hidden" name="coach" value="{{ coach.id }}"><br>
                             <label for="date">Date:</label>
-                            <input  class="au-input au-input--full" type="date" id="date" name="date" required>
+                            <input class="au-input au-input--full" type="date" id="date" name="date" required>
                             <br>
-                            <label for="venue">Venue:</label>
-                            <input class="au-input au-input--full" type="text" id="venue" name="venue" required>
+                                <label for="venue" style="margin-top: 15px;">Venue:</label><br>
+                                <select id="venue" class="custom-select" name="venue">
+                                    <option value="v1">Training Ground1</option>
+                                    <option value="v2">Training Ground2</option>
+                                </select>   
                             <br><br>
-                            <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit" id="submit-button" disabled>Create Training Session</button>
+                            <label for="start_time">Start Time:</label>
+                            <input class="au-input au-input--full" type="time" id="start_time" name="start_time" required>
+                            <label for="end_time">End Time:</label>
+                            <input class="au-input au-input--full" type="time" id="end_time" name="end_time" required>
+                            <br><br>
+                            <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">Create Training Session</button>
                         </form>
                         <div id="success-message" style="display: none; color: green;"></div>
-                    </div>
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="alert alert-success">{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </section>
-            <!-- END WELCOME-->
+                        <ul class="messages">
+                            {% for message in messages %}
+                                <li class="alert alert-success">{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                        
+                        </div>
+                        </section>
+                        <!-- END WELCOME -->
+                        
 
             
 

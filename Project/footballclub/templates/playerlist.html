@@ -63,11 +63,6 @@
                                     <span class="bot-line"></span>Profile</a>
                             </li>
                             <li>
-                                <a href="{% url 'training_list' %}">
-                                    <i class="fas fa-shopping-basket"></i>
-                                    <span class="bot-line"></span> Training Sessions</a>
-                            </li>
-                            <li>
                                 <a href="{% url 'coach_request_view' %}">
                                     <i class="fas fa-shopping-basket"></i>
                                     <span class="bot-line"></span> Player Request</a>
@@ -77,6 +72,12 @@
                                     <i class="fas fa-shopping-basket"></i>
                                     <span class="bot-line"></span>Player Approval</a>
                             </li>
+                            <li>
+                                <a href="{% url 'training_list' %}">
+                                    <i class="fas fa-shopping-basket"></i>
+                                    <span class="bot-line"></span> Training Sessions</a>
+                            </li>
+
                             <li class="has-sub">
                                 <a href="{% url 'match_list1' %}">
                                     <i class="fas fa-desktop"></i>
@@ -89,7 +90,7 @@
                         <div class="account-wrap">
                             <div class="account-item account-item--style2 clearfix js-item-menu">
                                 <div class="image">
-                                    <img src="{% if coach.img %}{{ coach.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="John Doe" />
+                                    <img src="{% if coach.img %}{{ coach.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="Coach Image" />
                                 </div>
                                 <div class="content">
                                     <a class="js-acc-btn" href="#">{{ coach.first_name }} {{ coach.last_name }}</a>
@@ -98,14 +99,14 @@
                                     <div class="info clearfix">
                                         <div class="image">
                                             <a href="#">
-                                                <img src="{% if coach.img %}{{ coach.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="John Doe" />
+                                                <img src="{% if coach.img %}{{ coach.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="Coach Image" />
                                             </a>
                                         </div>
                                         <div class="content">
                                             <h5 class="name">
                                                 <a href="#">{{ coach.first_name }}</a>
                                             </h5>
-                                            <span class="email">{{ user.email }}</span>
+                                            <span class="email">{{ coach.user.email }}</span>
                                         </div>
                                     </div>
                                     <div class="account-dropdown__footer">
@@ -114,7 +115,6 @@
                                     </div>
                                 </div>
                             </div>
-                            
                         </div>
                     </div>
                 </div>
@@ -190,48 +190,62 @@
 
         <!-- PAGE CONTENT-->
         <div class="page-content--bgf7">
-            <!-- BREADCRUMB-->
-            <section class="au-breadcrumb2">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="au-breadcrumb-content">
-                                <div class="au-breadcrumb-left">
-                                    <span class="au-breadcrumb-span">You are here:</span>
-                                    <ul class="list-unstyled list-inline au-breadcrumb__list">
-                                        <li class="list-inline-item active">
-                                            <a href="#">Home</a>
-                                        </li>
-                                        <li class="list-inline-item seprate">
-                                            <span>/</span>
-                                        </li>
-                                        <li class="list-inline-item">Dashboard</li>
-                                    </ul>
-                                </div>
 
+            <!-- MAIN CONTENT-->
+            <div class="main-content">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+
+                        <div class="card-title">
+                            <h3 >Player List</h3>
+                        </div>
+             
+
+                        <!-- Display User Profiles (Excluding Superusers) -->
+                    <div class="col-lg-9">
+
+                         {% if error_message %}
+                            <div class="error-message">
+                                <p>{{ error_message }}</p>
                             </div>
-                        </div>
+                            {% endif %}
+
+                            <table class="table table-borderless table-striped table-earning">
+                                <thead>
+                                <tr>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Age</th>
+                                    <th>Position</th>
+                                    <th>Jersey Number</th>
+                                    <th>Joining Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                
+                                    {% for player in players %}
+                                    <tr>
+                                        <td>{{ player.first_name }}</td>
+                                        <td>{{ player.last_name }}</td>
+                                        <td>{{ player.age }}</td>
+                                        <td>{{ player.pos }}</td>
+                                        <td>{{ player.jno }}</td>
+                                        <td>{{ player.cdate }}</td>
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            </table>
+
+                       </div>
+                    </div>
+
+
+
                     </div>
                 </div>
-            </section>
-            <!-- END BREADCRUMB-->
-
-            <!-- WELCOME-->
-            <section class="welcome p-t-10">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h1 class="title-4">Welcome back
-                                <span>{{ user.first_name }}!</span>
-                            </h1>
-                            <hr class="line-seprate">
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <!-- END WELCOME-->
-
-            
+            </div>
+  
 
   
         </div>

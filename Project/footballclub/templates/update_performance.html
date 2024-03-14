@@ -52,7 +52,6 @@ button:hover {
 }
 
 </style>
-
 <form method="post">
     {% csrf_token %}
     <h1>Update Player Performance for Training Session {{ training_session.date }}</h1>
@@ -72,13 +71,13 @@ button:hover {
         <tbody>
             {% for player in players %}
                 <tr>
-                    <td>{{ player.email }}</td>
-                    <td><input type="number" name="shoot_{{ player.email }}" value="{{ player_performance.shoot }}" min="0" max="100"></td>
-                    <td><input type="number" name="passing_{{ player.email }}" value="{{ player_performance.passing }}" min="0" max="100"></td>
-                    <td><input type="number" name="dribble_{{ player.email }}" value="{{ player_performance.dribble }}" min="0" max="100"></td>
-                    <td><input type="number" name="defense_{{ player.email }}" value="{{ player_performance.defense }}" min="0" max="100"></td>
-                    <td><input type="number" name="physical_{{ player.email }}" value="{{ player_performance.physical }}" min="0" max="100"></td>
-                    <td><input type="number" name="speed_{{ player.email }}" value="{{ player_performance.speed }}" min="0" max="100"></td>
+                    <td>{{ player.first_name }}</td>
+                    <td><input type="number" name="shoot_{{ player.user.email }}" value="{{ player_performance.shoot }}" min="0" max="100"></td>
+                    <td><input type="number" name="passing_{{ player.user.email }}" value="{{ player_performance.passing }}" min="0" max="100"></td>
+                    <td><input type="number" name="dribble_{{ player.user.email }}" value="{{ player_performance.dribble }}" min="0" max="100"></td>
+                    <td><input type="number" name="defense_{{ player.user.email }}" value="{{ player_performance.defense }}" min="0" max="100"></td>
+                    <td><input type="number" name="physical_{{ player.user.email }}" value="{{ player_performance.physical }}" min="0" max="100"></td>
+                    <td><input type="number" name="speed_{{ player.user.email }}" value="{{ player_performance.speed }}" min="0" max="100"></td>
                 </tr>
             {% endfor %}
         </tbody>

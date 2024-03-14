@@ -54,21 +54,21 @@
                         <div class="account-wrap">
                             <div class="account-item account-item--style2 clearfix js-item-menu">
                                 <div class="image">
-                                    <img src="{% if user.img %}{{ user.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="Profile Image" />
+                                    <img src="{% if staff.img %}{{ staff.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="Profile Image" />
                                 </div>
                                 <div class="content">
-                                    <a href="#">{{ user.first_name }} {{ user.last_name }}</a>
+                                    <a href="#">{{ staff.first_name }} {{ staff.last_name }}</a>
                                 </div>
                                 <div class="account-dropdown js-dropdown">
                                     <div class="info clearfix">
                                         <div class="image">
                                             <a href="#">
-                                                <img src="{% if user.img %}{{ user.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="Profile Image" />
+                                                <img src="{% if staff.img %}{{ staff.img.url|safe }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="Profile Image" />
                                             </a>
                                         </div>
                                         <div class="content">
                                             <h5 class="name">
-                                                <a href="#">{{ user.first_name }} {{ user.last_name }}</a>
+                                                <a href="#">{{ staff.first_name }} {{ staff.last_name }}</a>
                                             </h5>
                                             <span class="email">{{user.email}}</span>
                                         </div>
@@ -145,14 +145,10 @@
                                     
                                         </li>
                                         <li>
-                                            <a href="#">
+                                            <a href="{%url 'staffpayment'%}">
                                                 <i class="fas fa-shopping-basket"></i>Details</a>
                                         </li>
-                                        <li class="has-sub">
-                                            <a class="js-arrow" href="#">
-                                                <i class="fas fa-desktop"></i>Payments
-                                            </a>                                           
-                                        </li>
+
                                     </ul>
                                 </nav>
                             </aside>
