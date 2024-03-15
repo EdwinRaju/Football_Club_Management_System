@@ -94,6 +94,37 @@ class Staff(models.Model):
     def __str__(self):
         return self.user.email
     
+
+class MedicalStaff(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True)
+    first_name = models.CharField(max_length=30, blank=True, null=True)
+    last_name = models.CharField(max_length=30, blank=True, null=True)
+    age = models.IntegerField(blank=True, null=True)
+    cdate = models.DateField(blank=True, null=True)
+    sal = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    img = models.ImageField(upload_to="uploads", default="", null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
+
+    def __str__(self):
+        return self.user.email
+    
+
+
+class Injury(models.Model):
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    description = models.TextField()
+    rehabilitation_period = models.IntegerField()
+    date_reported = models.DateTimeField(default=timezone.now)
+    scanning_report = models.FileField(upload_to='scanning_reports/', blank=True, null=True)
+
+
+    def __str__(self):
+        return f"Injury of {self.player.first_name} {self.player.last_name}"
+
+    
 class Venue(models.Model):
     venue_id = models.AutoField(primary_key=True, serialize=False)
     name = models.CharField(max_length=100)

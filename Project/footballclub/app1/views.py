@@ -9,7 +9,7 @@ from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from .models import CoachRequest, CustomUser, Message, Player, PlayerDetailsRequest, ScoutedPlayer, Staff
+from .models import CoachRequest, CustomUser, Injury, Message, Player, PlayerDetailsRequest, ScoutedPlayer, Staff
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, get_object_or_404
@@ -163,6 +163,8 @@ def reg(request):
                 staff = Staff.objects.create(user=user, cdate=cdate, sal=sal)
             elif role == 'scout':  
                 scout = Scout.objects.create(user=user, cdate=cdate, sal=sal)
+            elif role == 'medical':  
+                scout = Scout.objects.create(user=user, cdate=cdate, sal=sal)
 
 
             my_dict = {'password': generated_password, 'email': email}
@@ -231,6 +233,9 @@ def login(request):
             elif user.role == 'player':
                 request.session['email'] = email
                 return redirect('player')
+            elif user.role == 'medical':
+                request.session['email'] = email
+                return redirect('medical')
         else:
             messages.error(request, "Login failed. Please check your credentials.")
     
@@ -929,10 +934,15 @@ def training_list(request):
 
 
 
+from django.shortcuts import render, redirect
+from .models import TrainingSession, Player, PlayerPerformance, Injury
+
 def update_performance(request, training_id):
     training_session = TrainingSession.objects.get(pk=training_id)
-    players = Player.objects.all()
-
+    
+    # Get all players who are not injured
+    players = Player.objects.exclude(injury__isnull=False)
+    
     # Initialize an empty dictionary to store player performances
     player_performances = {}
 
@@ -1487,3 +1497,126 @@ def send_message(request):
 
     # Redirect to the user's profile or any other appropriate page
     return redirect('chat', receiver_id=receiver_id)
+
+
+
+
+
+def medical(request):
+    if 'email' in request.session:
+        email = request.session['email']
+        User = get_user_model()
+        
+        try:
+            user = User.objects.get(email=email)
+            if user.role == "medical":
+                
+                
+                response = render(request, 'medical.html', )
+                response['Cache-Control'] = 'no-store, must-revalidate'
+                return response
+            else:
+                messages.error(request, "You don't have permission")
+        except User.DoesNotExist:
+            pass
+    
+    return redirect('login')
+
+
+
+
+def medadd(request):
+    if request.method == 'POST':
+        player_id = request.POST.get('player_id')
+        description = request.POST.get('description')
+        rehabilitation_period = int(request.POST.get('rehabilitation_period'))
+        scanning_report = request.FILES.get('scanning_report')  # Get the scanning report file
+        player = Player.objects.get(pk=player_id)
+        injury = Injury.objects.create(player=player, description=description,scanning_report=scanning_report, rehabilitation_period=rehabilitation_period)
+        
+        # Redirect to the same page after adding the injury
+        return redirect('medadd')
+
+    # Retrieve all players to populate the dropdown
+    players = Player.objects.all()
+    
+    return render(request, 'medadd.html', {'players': players})
+
+
+from django.http import HttpResponse
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from io import BytesIO
+from .models import Injury
+
+def injured_players(request):
+    injured_players = Injury.objects.all()
+    return render(request, 'injured_players.html', {'injured_players': injured_players})
+
+def generate_injured_players_pdf_view(request):
+    injured_players = Injury.objects.all()
+    pdf_data = generate_injured_players_pdf(injured_players)
+    
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="injured_players.pdf"'
+    response.write(pdf_data)
+    
+    return response
+
+def generate_injured_players_pdf(injured_players):
+    buffer = BytesIO()
+    pdf = canvas.Canvas(buffer, pagesize=letter)
+
+    # Set up the table headers
+    table_headers = ["Player", "Description", "Rehabilitation Period", "Player Age","Postion "]
+
+    # Set up the table style
+    col_widths = [pdf.stringWidth(header, "Helvetica", 10) + 50 for header in table_headers]
+
+    row_height = 20
+    table_width = sum(col_widths)
+    table_height = row_height * (len(injured_players) + 1)
+
+    # Set up the table position
+    x_position = (pdf._pagesize[0] - table_width) / 2
+    y_position = 750
+
+    # Draw the header "Medical Report"
+    pdf.setFont("Helvetica-Bold", 16)  # Use bold font for the header
+    pdf.drawString((pdf._pagesize[0] - pdf.stringWidth("Medical Report", "Helvetica-Bold", 16)) / 2, y_position, "Medical Report")
+    y_position -= 30  # Move down for the table
+
+    # Draw the table headers
+    pdf.setFont("Helvetica", 12)
+    for i, header in enumerate(table_headers):
+        pdf.drawString(x_position, y_position, header)
+        x_position += col_widths[i]
+    y_position -= row_height
+
+    # Draw the table content for injured players
+    pdf.setFont("Helvetica", 10)
+    for injured_player in injured_players:
+        x_position = (pdf._pagesize[0] - table_width) / 2
+        y_position -= row_height  # Move to the next row
+
+        # Draw each column for injured players
+        pdf.drawString(x_position, y_position, injured_player.player.first_name)  # Player Name
+        x_position += col_widths[0]
+
+        pdf.drawString(x_position, y_position, injured_player.description)  # Description
+        x_position += col_widths[1]
+
+        pdf.drawString(x_position, y_position, str(injured_player.rehabilitation_period))  # Rehab Period
+        x_position += col_widths[2]
+
+        # Fetch and draw player details (Name, Age, Position)
+        player_details = f"{injured_player.player.age} years old,                {injured_player.player.pos}"
+        pdf.drawString(x_position, y_position, player_details)
+        x_position += col_widths[3]
+        
+
+    pdf.showPage()
+    pdf.save()
+
+    buffer.seek(0)
+    return buffer.read()

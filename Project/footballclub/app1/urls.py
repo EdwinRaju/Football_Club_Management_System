@@ -4,6 +4,7 @@ from django.conf.urls.static import static
 from . import views
 from django.contrib.auth import views as auth_views
 
+
 urlpatterns = [
     path('dead', views.dead, name='dead'),
 
@@ -107,6 +108,13 @@ urlpatterns = [
     path('approve-player/<int:request_id>/', views.approve_player, name='approve_player'),
     path('reject-player/<int:request_id>/', views.reject_player, name='reject_player'),
     path('coach_dashboard/', views.coach_dashboard, name='coach_dashboard'),
+
+
+    path('medical',views.medical,name= 'medical'),
+    path('medadd',views.medadd,name= 'medadd'),
+    path('injured_players',views.injured_players,name= 'injured_players'),
+    path('generate_injured_players_pdf_view/', views.generate_injured_players_pdf_view, name='generate_injured_players_pdf_view'),
+    path('generate_injured_players_pdf/', views.generate_injured_players_pdf, name='generate_injured_players_pdf'),
 
 
 ]
