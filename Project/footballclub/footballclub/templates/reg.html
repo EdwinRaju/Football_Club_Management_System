@@ -1,0 +1,405 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="au theme template">
+    <meta name="author" content="Hau Nguyen">
+    <meta name="keywords" content="au theme template">
+
+    <!-- Title Page-->
+    <title>Dashboard</title>
+
+    <!-- Fontfaces CSS-->
+    <link href="{% static 'css/css/font-face.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'vendor/font-awesome-4.7/css/font-awesome.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'vendor/font-awesome-5/css/fontawesome-all.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'vendor/mdi-font/css/material-design-iconic-font.min.css' %}" rel="stylesheet" media="all">
+    
+
+    <!-- Bootstrap CSS-->
+    <link href="{% static 'vendor/bootstrap-4.1/bootstrap.min.css' %}" rel="stylesheet" media="all">
+
+    <!-- Vendor CSS -->
+    <link href="{% static 'vendor/animsition/animsition.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'vendor/wow/animate.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'vendor/css-hamburgers/hamburgers.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'vendor/slick/slick.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'vendor/select2/select2.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'vendor/perfect-scrollbar/perfect-scrollbar.css' %}" rel="stylesheet" media="all">
+    
+
+    <!-- Main CSS-->
+    <link href="{% static 'css/css/theme.css' %}" rel="stylesheet" media="all">
+<style></style>
+
+</head>
+
+<body class="animsition">
+    <div class="page-wrapper">
+        <!-- HEADER MOBILE-->
+        <header class="header-mobile d-block d-lg-none">
+            <div class="header-mobile__bar">
+                <div class="container-fluid">
+                    <div class="header-mobile-inner">
+                        <a class="logo" href="index.html">
+                            <img src="{% static 'images/images/icon/logo2.png' %}" alt="CoolAdmin" />
+
+                        </a>
+                        <button class="hamburger hamburger--slider" type="button">
+                            <span class="hamburger-box">
+                                <span class="hamburger-inner"></span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <nav class="navbar-mobile">
+                <div class="container-fluid">
+                    <ul class="navbar-mobile__list list-unstyled">
+                        <li class="has-sub">
+                            <a class="js-arrow" href="admin1">
+                                <i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                        </li>
+                        <li>
+                          <a href="registration">
+                            <i class="fas fa-chart-bar"></i>Registrations</a>
+                        </li>
+                        <li>
+                           <a href="adminreg">
+                            <i class="fas fa-group (alias)"></i>Team list</a>
+                        </li>
+                        <li>
+                           <a href="#">
+                            <i class="fas fa-calendar-alt"></i>Match Schedule</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- END HEADER MOBILE-->
+
+        <!-- MENU SIDEBAR-->
+        <aside class="menu-sidebar d-none d-lg-block">
+            <div class="logo">
+                <a href="#">
+                    <img src="{% static 'images/images/icon/logo2.png' %}" alt="CoolAdmin" />
+
+                </a>
+            </div>
+            <div class="menu-sidebar__content js-scrollbar1">
+                <nav class="navbar-sidebar">
+                    <ul class="list-unstyled navbar__list">
+                        <li class="active has-sub">
+                            <a class="js-arrow" href="admin1">
+                                <i class="fas fa-tachometer-alt"></i>Dashboard</a>
+
+                        <li>
+                            <a href="registration">
+                                <i class="fas fa-chart-bar"></i>Registrations</a>
+                        </li>
+                        <li>
+                            <a href="adminreg">
+                                <i class="fas fa-group (alias)"></i>Team list</a>
+                        </li>
+                        <li>
+                            <a href="add_match_schedule">
+                                <i class="fas fa-calendar-alt"></i>Match Schedule</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'match_list' %}">
+                                <i class="fas fa-calendar-alt"></i>Match List</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'admin_opponent_list' %}">
+                                <i class="fas fa-calendar-alt"></i>Opponent List</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+        <!-- END MENU SIDEBAR-->
+
+        <!-- PAGE CONTAINER-->
+        <div class="page-container">
+            <!-- HEADER DESKTOP-->
+            <header class="header-desktop">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="header-wrap">
+                            <form class="form-header" action="navigate_to_page" method="get">
+                                <input class="au-input au-input--xl" type="text" name="page" placeholder="Search" />
+                                <button class="au-btn--submit" type="submit">
+                                    <i class="zmdi zmdi-search"></i>
+                                </button>
+                            </form>
+                            <div class="header-button">
+                                
+                                <div class="account-wrap">
+                                    <div class="account-item clearfix js-item-menu">
+
+                                        <div class="content">
+                                            <i class="fa fa-user">Admin</i>
+                                        </div>
+                                        <div class="account-dropdown js-dropdown">
+                                            <div class="info clearfix">
+                                                <div class="content">
+                                                    <h5 class="name">
+                                                        <i class="fa fa-user">Admin</i>
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                            <div class="account-dropdown__footer">
+                                                <a href="logout">
+                                                    <i class="zmdi zmdi-power"></i>Logout</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- HEADER DESKTOP-->
+
+            <!-- MAIN CONTENT-->
+            <div class="main-content">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+
+                        <div class="content">
+                            <header>
+                                <h2>Registration</h2>
+                                <br>
+                            </header>
+                            <main>
+                                
+                                <!-- Registration Form -->
+                                <form id="Form" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <label for="email">Email ID:</label><br>
+                                    <input class="au-input au-input--full" type="email" id="email" name="email" placeholder="Enter Email ID">
+                                    <span class="error-message" id="emailError"></span>
+                                    <span class="error-message" id="emailCheckMessage"></span>
+                                    <br>
+                                    <label for="role" style="margin-top: 15px;">Role:</label><br>
+                                    <select id="role" class="custom-select" name="role" required>
+                                        <option value="staff">Staff</option>
+                                        <option value="player">Player</option>
+                                        <option value="coach">Coach</option>
+                                        <option value="scout">Scout</option>
+                                        <option value="medical">Medical</option>
+                                    </select>
+                                    <br>
+                                    <div id="positionField" style="display: none;">
+                                        <label for="pos" style="margin-top: 15px;">Position:</label><br>
+                                        <select id="pos" class="custom-select" name="pos">
+                                            <option value="CF">Forward</option>
+                                            <option value="CM">Midfielder</option>
+                                            <option value="CD">Defender</option>
+                                            <option value="GK">Goal Keeper</option>
+                                        </select>
+                                    </div>
+                                    <br>
+                                    <label for="cdate">Contract Start:</label>
+                                    <input class="au-input au-input--full" type="date" placeholder="contract date" id="cdate" name="cdate">
+                                    <span class="error-message" id="cdateError"></span>
+                                    <br><br>
+                                    <label for="salary">Salary:</label>
+                                    <input class="au-input au-input--full" type="text" id="salary" name="salary" placeholder="Enter Salary">
+                                    <span class="error-message" id="salaryError"></span><br><br>
+                                    <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit" id="submitButton">Submit</button>
+                                    {% if messages %}
+                                    <div class="alert alert-primary">
+                                        <ul class="alert alert-primary">
+                                            {% for message in messages %}
+                                            <li>{{ message }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    {% endif %}
+                                    <div id="errorContainer"></div>
+                                </form>
+                            </main>
+                        </div>
+                    
+                    
+                    
+                    
+                        <script>
+                            const form = document.getElementById("Form");
+                            const emailInput = document.getElementById("email");
+                            const emailCheckMessage = document.getElementById("emailCheckMessage");
+                            const role = document.getElementById("role");
+                            const positionField = document.getElementById("positionField");
+                            const cdateInput = document.getElementById("cdate");
+                            const cdateError = document.getElementById("cdateError");
+                            const salaryInput = document.getElementById("salary");
+                            const salaryError = document.getElementById("salaryError");
+                            const submitBtn = document.getElementById("submitBtn");
+                    
+                            // Email validation function
+                            function validateEmail(email) {
+                                const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+                                return emailPattern.test(email);
+                            }
+                    
+                    
+                            function checkEmailAvailability(email) {
+                            fetch(`/check_email/?email=${email}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.exists) {
+                                        emailCheckMessage.textContent = "This email is already registered.";
+                                    }else {
+                                        emailCheckMessage.textContent = "Email is available.";  // Email is available
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error("Error checking email availability:", error);
+                                    emailCheckMessage.textContent = "An error occurred while checking email availability.";
+                                });
+                        }
+                    
+                    
+                    
+                            // Salary validation function
+                            function validateSalary(salary) {
+                                const numericSalary = parseFloat(salary);
+                                return numericSalary >= 10000 && numericSalary <= 100000;
+                            }
+                    
+                            emailInput.addEventListener("input", function () {
+                            const email = emailInput.value;
+                            if (validateEmail(email)) {
+                                emailError.textContent = "";  // Clear the error message
+                                checkEmailAvailability(email);
+                            } else {
+                                emailError.textContent = "Invalid email format";
+                                emailCheckMessage.textContent = "";  // Clear the email availability message
+                            }
+                        });
+                            function validateForm(event) {
+                                event.preventDefault();
+                    
+                                // Check if the role is selected
+                                if (role.value === "") {
+                                    alert("Please select a role.");
+                                    return;
+                                }
+                    
+                                if (!validateEmail(emailInput.value)) {
+                                    emailError.textContent = "Invalid email format";
+                                    return;
+                                }
+                    
+                                if (cdateInput.value === "") {
+                                    cdateError.textContent = "Please select a contract date.";
+                                    return;
+                                }
+                    
+                                if (!validateSalary(salaryInput.value)) {
+                                    salaryError.textContent = "Salary must be between 10,000 and 100,000";
+                                    return;
+                                } else {
+                                    salaryError.textContent = "";
+                                }
+                    
+                                const selectedDate = new Date(cdateInput.value);
+                                const currentDate = new Date();
+                                if (selectedDate <= currentDate) {
+                                    cdateError.textContent = "Contract date must be in the future.";
+                                    return;
+                                }
+                    
+                                // You can add more validations here if needed
+                    
+                                // If all validations pass, you can submit the form
+                                form.submit();
+                            }
+                    
+                            form.addEventListener("submit", validateForm);
+                    
+                            role.addEventListener("change", function () {
+                                if (role.value === "player") {
+                                    positionField.style.display = "block";
+                                } else {
+                                    positionField.style.display = "none";
+                                }
+                    
+                                // Enable the submit button when the role is selected
+                                if (role.value !== "") {
+                                    submitBtn.removeAttribute("disabled");
+                                } else {
+                                    submitBtn.setAttribute("disabled", true);
+                                }
+                            });
+                    
+                            cdateInput.addEventListener("change", function () {
+                                const selectedDate = new Date(cdateInput.value);
+                                const currentDate = new Date();
+                                if (selectedDate <= currentDate) {
+                                    cdateError.textContent = "Contract date must be in the future.";
+                                } else {
+                                    cdateError.textContent = "";
+                                }
+                            });
+                    
+                            salaryInput.addEventListener("input", function () {
+                                const salary = salaryInput.value;
+                                if (!validateSalary(salary)) {
+                                    salaryError.textContent = "Salary must be between 10,000 and 100,000.";
+                                } else {
+                                    salaryError.textContent = "";
+                                }
+                            });
+                    
+                            // Initial state of the position field
+                            if (role.value === "player") {
+                                positionField.style.display = "block";
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+            <!-- END MAIN CONTENT-->
+            <!-- END PAGE CONTAINER-->
+        </div>
+
+    </div>
+
+<!-- Jquery JS-->
+<script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+<!-- Bootstrap JS-->
+<script src="{% static 'vendor/bootstrap-4.1/popper.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap-4.1/bootstrap.min.js' %}"></script>
+<!-- Vendor JS       -->
+<script src="{% static 'vendor/slick/slick.min.js' %}"></script>
+<script src="{% static 'vendor/wow/wow.min.js' %}"></script>
+<script src="{% static 'vendor/animsition/animsition.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap-progressbar/bootstrap-progressbar.min.js' %}"></script>
+<script src="{% static 'vendor/counter-up/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'vendor/counter-up/jquery.counterup.min.js' %}"></script>
+<script src="{% static 'vendor/circle-progress/circle-progress.min.js' %}"></script>
+<script src="{% static 'vendor/perfect-scrollbar/perfect-scrollbar.js' %}"></script>
+<script src="{% static 'vendor/chartjs/Chart.bundle.min.js' %}"></script>
+<script src="{% static 'vendor/select2/select2.min.js' %}"></script>
+                </li>
+                                <li>
+                                    <a href="tab.html">Tabs</a>
+                                </li>
+              
+<!-- Main JS-->
+<script src="{% static 'js/js/main.js' %}"></script>
+
+
+</body>
+
+</html>
+<!-- end document-->

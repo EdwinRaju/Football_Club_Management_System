@@ -1,0 +1,87 @@
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+
+</head>
+<style>
+    
+    /* Style the table */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+
+/* Style the form */
+form {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Style input fields */
+input[type="number"] {
+    width: 50px;
+    text-align: center;
+    border: none;
+    background-color: #f2f2f2;
+}
+
+/* Style the button */
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+</style>
+<form method="post">
+    {% csrf_token %}
+    <h1>Update Player Performance for Training Session {{ training_session.date }}</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Player</th>
+                <th><i class="fas fa-futbol"></i> Shoot</th>
+                <th><i class="fas fa-paste"></i> Passing</th>
+                <th><i class="fas fa-futbol"></i> Dribble</th>
+                <th><i class="fas fa-shield-alt"></i> Defense</th>
+                <th><i class="fas fa-running"></i> Physical</th>
+                <th><i class="fas fa-tachometer-alt"></i> Speed</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in players %}
+                <tr>
+                    <td>{{ player.first_name }}</td>
+                    <td><input type="number" name="shoot_{{ player.user.email }}" value="{{ player_performance.shoot }}" min="0" max="100"></td>
+                    <td><input type="number" name="passing_{{ player.user.email }}" value="{{ player_performance.passing }}" min="0" max="100"></td>
+                    <td><input type="number" name="dribble_{{ player.user.email }}" value="{{ player_performance.dribble }}" min="0" max="100"></td>
+                    <td><input type="number" name="defense_{{ player.user.email }}" value="{{ player_performance.defense }}" min="0" max="100"></td>
+                    <td><input type="number" name="physical_{{ player.user.email }}" value="{{ player_performance.physical }}" min="0" max="100"></td>
+                    <td><input type="number" name="speed_{{ player.user.email }}" value="{{ player_performance.speed }}" min="0" max="100"></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <button type="submit"><i class="fas fa-save"></i> Save Performance</button>
+</form>

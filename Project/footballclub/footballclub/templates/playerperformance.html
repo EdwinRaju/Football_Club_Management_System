@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Player Performance</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        h2 {
+            color: #777;
+        }
+
+        h3 {
+            font-size: 18px;
+            color: #444;
+        }
+
+        p {
+            color: #555;
+        }
+
+        canvas {
+            background-color: #fff;
+            border: 1px solid #ccc;
+        }
+
+        .performance-chart {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .icon {
+            color: #007bff;
+        }
+
+        .performance-table {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px;
+        }
+
+        .performance-column {
+            width: 48%; /* Adjust the width as needed */
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+        }
+
+        .performance-column h3 {
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+    <h1>Player Performance</h1>
+    <h2>{{ player.email }}</h2>
+    <a class="js-arrow" href="{%url 'player'%}">
+        Dashboard
+    </a>
+    <div class="performance-table">
+        <div class="performance-column">
+            <h3>Latest Performance</h3>
+            <p><i class="fas fa-bullseye icon"></i> Shoot: <span id="latest_shoot">{{ latest_performance.shoot }}</span></p>
+            <p><i class="fas fa-futbol icon"></i> Passing: <span id="latest_passing">{{ latest_performance.passing }}</span></p>
+            <p><i class="fas fa-running icon"></i> Dribble: <span id="latest_dribble">{{ latest_performance.dribble }}</span></p>
+            <p><i class="fas fa-shield-alt icon"></i> Defense: <span id="latest_defense">{{ latest_performance.defense }}</span></p>
+            <p><i class="fas fa-dumbbell icon"></i> Physical: <span id="latest_physical">{{ latest_performance.physical }}</span></p>
+            <p><i class="fas fa-tachometer-alt icon"></i> Speed: <span id="latest_speed">{{ latest_performance.speed }}</span></p>
+        </div>
+
+        <div class="performance-column">
+            <h3>Average Performance</h3>
+            <p><i class="fas fa-bullseye icon"></i> Shoot: <span id="average_shoot">{{ average_performance.shoot_avg }}</span></p>
+            <p><i class="fas fa-futbol icon"></i> Passing: <span id="average_passing">{{ average_performance.passing_avg }}</span></p>
+            <p><i class="fas fa-running icon"></i> Dribble: <span id="average_dribble">{{ average_performance.dribble_avg }}</span></p>
+            <p><i class="fas fa-shield-alt icon"></i> Defense: <span id="average_defense">{{ average_performance.defense_avg }}</span></p>
+            <p><i class="fas fa-dumbbell icon"></i> Physical: <span id="average_physical">{{ average_performance.physical_avg }}</span></p>
+            <p><i class="fas fa-tachometer-alt icon"></i> Speed: <span id="average_speed">{{ average_performance.speed_avg }}</span></p>
+        </div>
+    </div>
+
+    <div class="performance-chart">
+        <canvas id="performanceChart"></canvas>
+    </div>
+
+    <script>
+        var ctx = document.getElementById('performanceChart').getContext('2d');
+        
+        var latest_shoot = Number(document.getElementById('latest_shoot').innerText);
+        var latest_passing = Number(document.getElementById('latest_passing').innerText);
+        var latest_dribble = Number(document.getElementById('latest_dribble').innerText);
+        var latest_defense = Number(document.getElementById('latest_defense').innerText);
+        var latest_physical = Number(document.getElementById('latest_physical').innerText);
+        var latest_speed = Number(document.getElementById('latest_speed').innerText);
+        
+        var average_shoot = Number(document.getElementById('average_shoot').innerText);
+        var average_passing = Number(document.getElementById('average_passing').innerText);
+        var average_dribble = Number(document.getElementById('average_dribble').innerText);
+        var average_defense = Number(document.getElementById('average_defense').innerText);
+        var average_physical = Number(document.getElementById('average_physical').innerText);
+        var average_speed = Number(document.getElementById('average_speed').innerText);
+        
+        var latestPerformanceData = [latest_shoot, latest_passing, latest_dribble, latest_defense, latest_physical, latest_speed];
+      
+        var latestPerformance = {
+          label: 'Latest Performance',
+          data: latestPerformanceData,
+          borderColor: 'rgba(255, 99, 132, 1)',
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        };
+      
+        var averagePerformanceData = [average_shoot, average_passing, average_dribble, average_defense, average_physical, average_speed];
+      
+        var averagePerformance = {
+          label: 'Average Performance',
+          data: averagePerformanceData,
+          borderColor: 'rgba(54, 162, 235, 1)',
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        };
+      
+        var data = {
+          labels: ['Shoot', 'Passing', 'Dribble', 'Defense', 'Physical', 'Speed'],
+          datasets: [latestPerformance, averagePerformance],
+        };
+      
+        var config = {
+          type: 'radar',
+          data: data,
+        };
+      
+        var myChart = new Chart(ctx, config);
+    </script>
+</body>
+</html>

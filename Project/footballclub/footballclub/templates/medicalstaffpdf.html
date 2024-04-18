@@ -1,0 +1,44 @@
+<!-- pdf_template.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Injured Players</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Injured Players</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Player</th>
+                <th>Description</th>
+                <th>Rehabilitation Period</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in injured_players %}
+            <tr>
+                <td>{{ player.player.first_name }} {{ player.player.last_name }}</td>
+                <td>{{ player.description }}</td>
+                <td>{{ player.rehabilitation_period }} months</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
