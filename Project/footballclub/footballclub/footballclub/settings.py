@@ -132,8 +132,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True  # Or False if not using TLS
-EMAIL_HOST_USER = 'edwinraju2024a@mca.ajce.in'
-EMAIL_HOST_PASSWORD = '90483445567'
+
 
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 SESSION_COOKIE_NAME = "sessionid"
